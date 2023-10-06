@@ -1,0 +1,7 @@
+# Binary files in the root folder
+/projetprelim
+/projet
+/projetgraph
+
+# Object files
+*.o
