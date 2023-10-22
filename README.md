@@ -25,7 +25,7 @@ Groupe No 12
 
 ## Executer run le programme
 
-pour compiler et executer la version préliminaire, executer les 2 commandes suivantes:
+Pour compiler et executer la version préliminaire, executez les 2 commandes suivantes:
 ```shell
 cd ./src/
 make projetprelim
