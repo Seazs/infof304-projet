@@ -21,3 +21,12 @@ Groupe No 12
 1. Communiquez l'adresse de votre dépôt via le [formulaire sur l'UV](https://uv.ulb.ac.be/mod/choicegroup/view.php?id=1164034)
 1. Mettez à jour votre dépôt au fur et à mesure de votre travail sur le projet
 1. Le dernier commit avant l'heure de l'échéance (intermédiaire ou finale) sera considéré comme la version soumise pour évaluation
+
+
+## Executer run le programme
+
+pour compiler et executer la version préliminaire, executer les 2 commandes suivantes:
+```shell
+cd ./src/
+make projetprelim
+```
