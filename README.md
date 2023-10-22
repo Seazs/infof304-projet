@@ -2,7 +2,7 @@
 
 Groupe No 12
 * Bienfait Alexandre (@alexbien)
-* de Laveleye Victor (@)
+* de Laveleye Victor (@vdelavel)
 * Léchaudé Pierre (@plechaud)
 
 ## Instructions
