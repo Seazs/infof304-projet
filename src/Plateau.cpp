@@ -6,6 +6,7 @@ using std::endl;
 
 Plateau::Plateau()
 {
+    //initialise les 64 cases du plateau avec leur nom en clé
     for (int j = 1; j < 9; j++)
     {
         for (int i = 1; i < 9; i++)
@@ -17,6 +18,11 @@ Plateau::Plateau()
             cases.insert(std::pair<string, Case*>(nom, c));
         }
     }
+    //crée les 4 pions centraux
+    cases["d4"]->setCouleur('O');
+    cases["e4"]->setCouleur('X');
+    cases["d5"]->setCouleur('X');
+    cases["e5"]->setCouleur('O');
 }
 
 Plateau::~Plateau()
@@ -27,9 +33,8 @@ Plateau::~Plateau()
 void Plateau::afficherPlateau()
 {
     cout << "  a b c d e f g h" << endl;
-    map<string, Case*>::iterator itr;
-    
 
+    map<string, Case*>::iterator itr; //itérateur pour parcourir la map
     for (int i=1; i<9; i++)
     {
         cout << i << " ";
@@ -38,8 +43,8 @@ void Plateau::afficherPlateau()
             string nom = "";
             nom += (char)(j + 96);
             nom += (char)(i + 48);
-            itr = cases.find(nom);
-            cout << itr->second->getCouleur() << " ";
+            itr = cases.find(nom); //recherche la case dans la map
+            cout << itr->second->getCouleur() << " "; //affiche la couleur de la case
         }
         cout << i << endl;
     }

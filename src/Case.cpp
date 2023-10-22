@@ -75,7 +75,7 @@ Case* Case::getDownRight()
 
 void Case::setCouleur(char couleur)
 {
-    couleur = couleur;
+    this->couleur = couleur;
 }
 
 char Case::getCouleur()
