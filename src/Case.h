@@ -1,6 +1,11 @@
+#include <string>
+
+using std::string;
+
 class Case
 {
 private:
+    string nom;
     Case* up;
     Case* down;
     Case* left;
@@ -9,6 +14,7 @@ private:
     Case* upRight;
     Case* downLeft;
     Case* downRight;
+    string couleur;
 public:
     Case();
     ~Case();
