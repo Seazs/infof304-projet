@@ -10,12 +10,11 @@ class Plateau
 {
     private:
         map<string, Case*> cases;
-        
+
     public:
         Plateau();
         ~Plateau();
         void afficherPlateau();
-        void ajouterPiece();
-        void capturePiece();
-        void initialiserPlateau();
-}
+        //void ajouterPiece();
+        //void capturePiece();
+};
