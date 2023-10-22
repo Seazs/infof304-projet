@@ -1,6 +1,6 @@
 # INFOH304 Projet
 
-Groupe No XX
+Groupe No 12
 * Bienfait Alexandre (@alexbien)
 * de Laveleye Victor (@)
 * Léchaudé Pierre (@plechaud)
