@@ -29,4 +29,5 @@ pour compiler et executer la version préliminaire, executer les 2 commandes sui
 ```shell
 cd ./src/
 make projetprelim
+./projetprelim
 ```
