@@ -1,9 +1,9 @@
 # INFOH304 Projet
 
 Groupe No XX
-* NOM_1 prénom_1 (@identifiant_Gitlab_1)
-* NOM_2 prénom_2 (@identifiant_Gitlab_2)
-* NOM_3 prénom_3 (@identifiant_Gitlab_3)
+* Bienfait Alexandre (@alexbien)
+* de Laveleye Victor (@)
+* Léchaudé Pierre (@plechaud)
 
 ## Instructions
 
