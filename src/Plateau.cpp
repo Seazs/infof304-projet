@@ -137,7 +137,7 @@ void Plateau::ecoute_entree()
         cout << "Entrez le nom de la case à modifier du joueur " << couleur_joueur << " : " ;
         cin >> nom_case;
     }
-    if (couleur_joueur = 'X')
+    if (couleur_joueur == 'X')
     {
         couleur_joueur = 'O';
     }
