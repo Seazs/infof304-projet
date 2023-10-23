@@ -35,35 +35,41 @@ Plateau::Plateau()
 
 void Plateau::initalise_voisin_cases()
 {
-    for (int i=1; i<9; i++)
+    for (char i='1'; i<'9'; i++)
     {
-        for(int j=1; j<9; j++)
+        for(char j='a'; j<'i'; j++)
         {
-            char nomX;
-            char nomY;
-            string nom;
-            nomX = (char)(i + 96);
-            nomY = (char)(j + 48);
-            nom = nomX + nomY;
+            string nom = "";
+            nom += j;
+            nom += i;
+            cout << nom << endl;
             map<string, Case*>::iterator itr; //itérateur pour parcourir la map
             itr = cases.find(nom); //recherche la case dans la map
-            string nomUp;
-            nomUp = nomX + (char)(nomY + 1);
-            string nomDown;
-            nomDown = nomX + (char)(nomY - 1);
-            string nomLeft;
-            nomLeft = (char)(nomX - 1) + nomY;
-            string nomRight;
-            nomRight = (char)(nomX + 1) + nomY;
-            string nomUpLeft;
-            nomUpLeft = (char)(nomX - 1) + (char)(nomY + 1);
-            string nomUpRight;
-            nomUpRight = (char)(nomX + 1) + (char)(nomY + 1);
-            string nomDownLeft;
-            nomDownLeft = (char)(nomX - 1) + (char)(nomY - 1);
-            string nomDownRight;
-            nomDownRight = (char)(nomX + 1) + (char)(nomY - 1);
-
+            string nomUp = "";
+            nomUp += j;
+            nomUp += (i-1);
+            string nomDown = "";
+            nomDown += j;
+            nomDown += (i+1);
+            string nomLeft = "";
+            nomLeft += (j-1);
+            nomLeft += i;
+            string nomRight = "";
+            nomRight += (j+1);
+            nomRight += i;
+            string nomUpLeft = "";
+            nomUpLeft += (j-1);
+            nomUpLeft += (i-1);
+            string nomUpRight = "";
+            nomUpRight += (j+1);
+            nomUpRight += (i-1);
+            string nomDownLeft = "";
+            nomDownLeft += (j-1);
+            nomDownLeft += (i+1);
+            string nomDownRight = "";
+            nomDownRight += (j+1);
+            nomDownRight += (i+1);
+            
             //si la case existe
             if (cases.find(nomUp) != cases.end())
             {
@@ -148,7 +154,14 @@ void Plateau::ecoute_entree()
     map<string, Case*>::iterator itr;
     cout << "voisins de la case jouée : " << endl;
     itr = cases.find(nom_case);
-    //cout << "up : " << itr->second->getUp()->getNom() << endl;
+    cout << "up : " << ((itr->second->getUp())->getNom()) << endl;
+    cout << "down : " << ((itr->second->getDown())->getNom()) << endl;
+    cout << "left : " << ((itr->second->getLeft())->getNom()) << endl;
+    cout << "right : " << ((itr->second->getRight())->getNom()) << endl;
+    cout << "upLeft : " << ((itr->second->getUpLeft())->getNom()) << endl;
+    cout << "upRight : " << ((itr->second->getUpRight())->getNom()) << endl;
+    cout << "downLeft : " << ((itr->second->getDownLeft())->getNom()) << endl;
+    cout << "downRight : " << ((itr->second->getDownRight())->getNom()) << endl;
 }
 
 bool Plateau::ajouterPiece(string nom, char couleur)
