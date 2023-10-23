@@ -3,6 +3,8 @@
 #include <iostream>
 using std::cout;
 using std::endl;
+using std::string;
+using std::cin;
 
 Plateau::Plateau()
 {
@@ -23,6 +25,10 @@ Plateau::Plateau()
     cases["e4"]->setCouleur('X');
     cases["d5"]->setCouleur('X');
     cases["e5"]->setCouleur('O');
+
+    //couleur du joueur qui commence
+    couleur_joueur = 'X';
+    
 }
 
 Plateau::~Plateau()
@@ -49,5 +55,25 @@ void Plateau::afficherPlateau()
         cout << i << endl;
     }
     cout << "  a b c d e f g h" << endl;
+}
+
+void Plateau::ecoute_entree()
+{
+    string nom_case;
+    cout << "Entrez le nom de la case à modifier du joueur " << couleur_joueur << " : " ;
+    cin >> nom_case;
+    while(ajouterPiece(nom_case, couleur_joueur) == false)
+    {
+        cout << "Entrez le nom de la case à modifier du joueur " << couleur_joueur << " : " ;
+        cin >> nom_case;
+    }
+    if (couleur_joueur = 'X')
+    {
+        couleur_joueur = 'O';
+    }
+    else
+    {
+        couleur_joueur = 'X';
+    }
 }
 

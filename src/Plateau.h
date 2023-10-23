@@ -10,11 +10,13 @@ class Plateau
 {
     private:
         map<string, Case*> cases;
+        char couleur_joueur;
 
     public:
         Plateau();
         ~Plateau();
         void afficherPlateau();
-        //void ajouterPiece();
+        void ecoute_entree(); 
+        bool ajouterPiece(string nom, char couleur);
         //void capturePiece();
 };
