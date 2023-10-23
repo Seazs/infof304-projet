@@ -19,10 +19,17 @@ Plateau::Plateau()
         }
     }
     //crée les 4 pions centraux
-    cases["d4"]->setCouleur('O');
-    cases["e4"]->setCouleur('X');
-    cases["d5"]->setCouleur('X');
-    cases["e5"]->setCouleur('O');
+    cases["b2"]->setCouleur('a');
+    cases["c2"]->setCouleur('l');
+    cases["d2"]->setCouleur('e');
+    cases["e2"]->setCouleur('x');
+    cases["d4"]->setCouleur('g');
+    cases["e4"]->setCouleur('r');
+    cases["f4"]->setCouleur('o');
+    cases["g4"]->setCouleur('s');
+    cases["d6"]->setCouleur('c');
+    cases["e6"]->setCouleur('o');
+    cases["f6"]->setCouleur('n');
 }
 
 Plateau::~Plateau()
