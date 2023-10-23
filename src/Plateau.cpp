@@ -47,7 +47,6 @@ void Plateau::initalise_voisin_cases()
             nom = nomX + nomY;
             map<string, Case*>::iterator itr; //itérateur pour parcourir la map
             itr = cases.find(nom); //recherche la case dans la map
-            
             string nomUp;
             nomUp = nomX + (char)(nomY + 1);
             string nomDown;
@@ -65,17 +64,39 @@ void Plateau::initalise_voisin_cases()
             string nomDownRight;
             nomDownRight = (char)(nomX + 1) + (char)(nomY - 1);
 
-
-            itr->second->setVoisins(
-                cases[nomUp],
-                cases[nomDown],
-                cases[nomLeft],
-                cases[nomRight],
-                cases[nomUpLeft],
-                cases[nomUpRight],
-                cases[nomDownLeft],
-                cases[nomDownRight]
-            );
+            //si la case existe
+            if (cases.find(nomUp) != cases.end())
+            {
+                itr->second->setUp(cases[nomUp]);
+            }
+            if (cases.find(nomDown) != cases.end())
+            {
+                itr->second->setDown(cases[nomDown]);
+            }
+            if (cases.find(nomLeft) != cases.end())
+            {
+                itr->second->setLeft(cases[nomLeft]);
+            }
+            if (cases.find(nomRight) != cases.end())
+            {
+                itr->second->setRight(cases[nomRight]);
+            }
+            if (cases.find(nomUpLeft) != cases.end())
+            {
+                itr->second->setUpLeft(cases[nomUpLeft]);
+            }
+            if (cases.find(nomUpRight) != cases.end())
+            {
+                itr->second->setUpRight(cases[nomUpRight]);
+            }
+            if (cases.find(nomDownLeft) != cases.end())
+            {
+                itr->second->setDownLeft(cases[nomDownLeft]);
+            }
+            if (cases.find(nomDownRight) != cases.end())
+            {
+                itr->second->setDownRight(cases[nomDownRight]);
+            }
         }
     }
 }
@@ -127,7 +148,7 @@ void Plateau::ecoute_entree()
     map<string, Case*>::iterator itr;
     cout << "voisins de la case jouée : " << endl;
     itr = cases.find(nom_case);
-    cout << "up : " << itr->second->getUp()->getNom() << endl;
+    //cout << "up : " << itr->second->getUp()->getNom() << endl;
 }
 
 bool Plateau::ajouterPiece(string nom, char couleur)

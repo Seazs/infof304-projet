@@ -20,18 +20,46 @@ Case::~Case()
     //dtor
 }
 
-void Case::setVoisins(Case* up, Case* down, Case* left, Case* right, Case* upLeft, Case* upRight, Case* downLeft, Case* downRight)
+void Case::setUp(Case* up)
 {
-    // defini les cases voisines
     this->up = up;
+}
+
+void Case::setDown(Case* down)
+{
     this->down = down;
+}
+
+void Case::setLeft(Case* left)
+{
     this->left = left;
+}
+
+void Case::setRight(Case* right)
+{
     this->right = right;
+}
+
+void Case::setUpLeft(Case* upLeft)
+{
     this->upLeft = upLeft;
+}
+
+void Case::setUpRight(Case* upRight)
+{
     this->upRight = upRight;
+}
+
+void Case::setDownLeft(Case* downLeft)
+{
     this->downLeft = downLeft;
+}
+
+void Case::setDownRight(Case* downRight)
+{
     this->downRight = downRight;
 }
+
 
 string Case::getNom()
 {
