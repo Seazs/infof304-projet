@@ -77,3 +77,26 @@ void Plateau::ecoute_entree()
     }
 }
 
+bool Plateau::ajouterPiece(string nom, char couleur)
+{
+    map<string, Case*>::iterator itr; //itérateur pour parcourir la map
+    itr = cases.find(nom); //recherche la case dans la map
+    if (itr != cases.end()) //si la case existe
+    {
+        if (itr->second->getCouleur() == '.') //si la case est vide
+        {
+            itr->second->setCouleur(couleur); //on ajoute la pièce
+            return true;
+        }
+        else
+        {
+            cout << "La case est déjà occupée" << endl;
+            return false;
+        }
+    }
+    else
+    {
+        cout << "La case n'existe pas" << endl;
+        return false;
+    }
+}
