@@ -16,7 +16,7 @@ Plateau::Plateau()
             string nom = "";
             nom += (char)(i + 96);
             nom += (char)(j + 48);
-            Case* c = new Case();
+            Case* c = new Case(nom);
             cases.insert(std::pair<string, Case*>(nom, c));
         }
     }
@@ -28,7 +28,56 @@ Plateau::Plateau()
 
     //couleur du joueur qui commence
     couleur_joueur = 'X';
+
+    initalise_voisin_cases();
     
+}
+
+void Plateau::initalise_voisin_cases()
+{
+    for (int i=1; i<9; i++)
+    {
+        for(int j=1; j<9; j++)
+        {
+            char nomX;
+            char nomY;
+            string nom;
+            nomX = (char)(i + 96);
+            nomY = (char)(j + 48);
+            nom = nomX + nomY;
+            map<string, Case*>::iterator itr; //itérateur pour parcourir la map
+            itr = cases.find(nom); //recherche la case dans la map
+            
+            string nomUp;
+            nomUp = nomX + (char)(nomY + 1);
+            string nomDown;
+            nomDown = nomX + (char)(nomY - 1);
+            string nomLeft;
+            nomLeft = (char)(nomX - 1) + nomY;
+            string nomRight;
+            nomRight = (char)(nomX + 1) + nomY;
+            string nomUpLeft;
+            nomUpLeft = (char)(nomX - 1) + (char)(nomY + 1);
+            string nomUpRight;
+            nomUpRight = (char)(nomX + 1) + (char)(nomY + 1);
+            string nomDownLeft;
+            nomDownLeft = (char)(nomX - 1) + (char)(nomY - 1);
+            string nomDownRight;
+            nomDownRight = (char)(nomX + 1) + (char)(nomY - 1);
+
+
+            itr->second->setVoisins(
+                cases[nomUp],
+                cases[nomDown],
+                cases[nomLeft],
+                cases[nomRight],
+                cases[nomUpLeft],
+                cases[nomUpRight],
+                cases[nomDownLeft],
+                cases[nomDownRight]
+            );
+        }
+    }
 }
 
 Plateau::~Plateau()
@@ -75,6 +124,10 @@ void Plateau::ecoute_entree()
     {
         couleur_joueur = 'X';
     }
+    map<string, Case*>::iterator itr;
+    cout << "voisins de la case jouée : " << endl;
+    itr = cases.find(nom_case);
+    cout << "up : " << itr->second->getUp()->getNom() << endl;
 }
 
 bool Plateau::ajouterPiece(string nom, char couleur)

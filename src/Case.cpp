@@ -1,8 +1,8 @@
 #include "Case.h"
 
-Case::Case()
+Case::Case(string nom)
 {
-    nom = "";
+    this->nom = nom;
     // initialise les cases voisines
     up = NULL;
     down = NULL;
@@ -20,17 +20,22 @@ Case::~Case()
     //dtor
 }
 
-void Case::setCase(Case* up, Case* down, Case* left, Case* right, Case* upLeft, Case* upRight, Case* downLeft, Case* downRight)
+void Case::setVoisins(Case* up, Case* down, Case* left, Case* right, Case* upLeft, Case* upRight, Case* downLeft, Case* downRight)
 {
     // defini les cases voisines
-    up = up;
-    down = down;
-    left = left;
-    right = right;
-    upLeft = upLeft;
-    upRight = upRight;
-    downLeft = downLeft;
-    downRight = downRight;
+    this->up = up;
+    this->down = down;
+    this->left = left;
+    this->right = right;
+    this->upLeft = upLeft;
+    this->upRight = upRight;
+    this->downLeft = downLeft;
+    this->downRight = downRight;
+}
+
+string Case::getNom()
+{
+    return nom;
 }
 
 Case* Case::getUp()

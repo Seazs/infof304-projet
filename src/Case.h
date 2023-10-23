@@ -15,11 +15,12 @@ private:
     Case* downRight;
     char couleur;
 public:
-    Case();
+    Case(string nom);
     ~Case();
-    void setCase(Case* up, Case* down, Case* left, Case* right, Case* upLeft, Case* upRight, Case* downLeft, Case* downRight);
+    void setVoisins(Case* up, Case* down, Case* left, Case* right, Case* upLeft, Case* upRight, Case* downLeft, Case* downRight);
     void setCouleur(char couleur);
     char getCouleur();
+    string getNom();
     Case* getUp();
     Case* getDown();
     Case* getLeft();

@@ -17,6 +17,7 @@ class Plateau
         ~Plateau();
         void afficherPlateau();
         void ecoute_entree(); 
+        void initalise_voisin_cases();
         bool ajouterPiece(string nom, char couleur);
         //void capturePiece();
 };
