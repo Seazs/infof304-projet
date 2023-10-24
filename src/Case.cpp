@@ -93,7 +93,7 @@ Case* Case::getUpLeft()
 
 Case* Case::getUpRight()
 {
-    return  upRight;
+    return upRight;
 }
 
 Case* Case::getDownLeft()

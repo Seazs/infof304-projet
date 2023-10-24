@@ -42,7 +42,6 @@ void Plateau::initalise_voisin_cases()
             string nom = "";
             nom += j;
             nom += i;
-            cout << nom << endl;
             map<string, Case*>::iterator itr; //itérateur pour parcourir la map
             itr = cases.find(nom); //recherche la case dans la map
             string nomUp = "";
@@ -151,17 +150,6 @@ void Plateau::ecoute_entree()
     {
         couleur_joueur = 'X';
     }
-    map<string, Case*>::iterator itr;
-    cout << "voisins de la case jouée : " << endl;
-    itr = cases.find(nom_case);
-    cout << "up : " << ((itr->second->getUp())->getNom()) << endl;
-    cout << "down : " << ((itr->second->getDown())->getNom()) << endl;
-    cout << "left : " << ((itr->second->getLeft())->getNom()) << endl;
-    cout << "right : " << ((itr->second->getRight())->getNom()) << endl;
-    cout << "upLeft : " << ((itr->second->getUpLeft())->getNom()) << endl;
-    cout << "upRight : " << ((itr->second->getUpRight())->getNom()) << endl;
-    cout << "downLeft : " << ((itr->second->getDownLeft())->getNom()) << endl;
-    cout << "downRight : " << ((itr->second->getDownRight())->getNom()) << endl;
 }
 
 bool Plateau::ajouterPiece(string nom, char couleur)
@@ -172,8 +160,15 @@ bool Plateau::ajouterPiece(string nom, char couleur)
     {
         if (itr->second->getCouleur() == '.') //si la case est vide
         {
-            itr->second->setCouleur(couleur); //on ajoute la pièce
-            return true;
+            if(capturePieces(itr->second) == true){
+                itr->second->setCouleur(couleur); //on ajoute la pièce
+                cout << "Pièce a été capturée" << endl;
+                return true;
+            }
+            else{
+                cout << "Pas de pièce n'a pas été capturée" << endl;
+                return false;
+            }
         }
         else
         {
@@ -186,4 +181,380 @@ bool Plateau::ajouterPiece(string nom, char couleur)
         cout << "La case n'existe pas" << endl;
         return false;
     }
+}
+
+bool Plateau::verifie_la_prise_Up(Case* c){
+    if(c->getUp() != NULL){
+        if(c->getUp()->getCouleur() != '.'){
+            if(c->getUp()->getCouleur() != couleur_joueur){
+                if(c->getUp()->getUp() != NULL){
+                    if(c->getUp()->getUp()->getCouleur() != '.'){
+                        if(c->getUp()->getUp()->getCouleur() == couleur_joueur){
+                            return true;
+                        }
+                        else{
+                            return verifie_la_prise_Up(c->getUp());
+                        }
+                    }
+                    else{
+                        return false;
+                    }
+                }
+                else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
+}
+
+bool Plateau::verifie_la_prise_Down(Case* c){
+    if(c->getDown() != NULL){
+        if(c->getDown()->getCouleur() != '.'){
+            if(c->getDown()->getCouleur() != couleur_joueur){
+                if(c->getDown()->getDown() != NULL){
+                    if(c->getDown()->getDown()->getCouleur() != '.'){
+                        if(c->getDown()->getDown()->getCouleur() == couleur_joueur){
+                            return true;
+                        }
+                        else{
+                            return verifie_la_prise_Down(c->getDown());
+                        }
+                    }
+                    else{
+                        return false;
+                    }
+                }
+                else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
+}
+
+bool Plateau::verifie_la_prise_Left(Case* c){
+    if(c->getLeft() != NULL){
+        if(c->getLeft()->getCouleur() != '.'){
+            if(c->getLeft()->getCouleur() != couleur_joueur){
+                if(c->getLeft()->getLeft() != NULL){
+                    if(c->getLeft()->getLeft()->getCouleur() != '.'){
+                        if(c->getLeft()->getLeft()->getCouleur() == couleur_joueur){
+                            return true;
+                        }
+                        else{
+                            return verifie_la_prise_Left(c->getLeft());
+                        }
+                    }
+                    else{
+                        return false;
+                    }
+                }
+                else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
+}
+
+bool Plateau::verifie_la_prise_Right(Case* c){
+    if(c->getRight() != NULL){
+        if(c->getRight()->getCouleur() != '.'){
+            if(c->getRight()->getCouleur() != couleur_joueur){
+                if(c->getRight()->getRight() != NULL){
+                    if(c->getRight()->getRight()->getCouleur() != '.'){
+                        if(c->getRight()->getRight()->getCouleur() == couleur_joueur){
+                            return true;
+                        }
+                        else{
+                            return verifie_la_prise_Right(c->getRight());
+                        }
+                    }
+                    else{
+                        return false;
+                    }
+                }
+                else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
+}
+
+bool Plateau::verifie_la_prise_UpLeft(Case* c){
+    if(c->getUpLeft() != NULL){
+        if(c->getUpLeft()->getCouleur() != '.'){
+            if(c->getUpLeft()->getCouleur() != couleur_joueur){
+                if(c->getUpLeft()->getUpLeft() != NULL){
+                    if(c->getUpLeft()->getUpLeft()->getCouleur() != '.'){
+                        if(c->getUpLeft()->getUpLeft()->getCouleur() == couleur_joueur){
+                            return true;
+                        }
+                        else{
+                            return verifie_la_prise_UpLeft(c->getUpLeft());
+                        }
+                    }
+                    else{
+                        return false;
+                    }
+                }
+                else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
+}
+
+bool Plateau::verifie_la_prise_UpRight(Case* c){
+    if(c->getUpRight() != NULL){
+        if(c->getUpRight()->getCouleur() != '.'){
+            if(c->getUpRight()->getCouleur() != couleur_joueur){
+                if(c->getUpRight()->getUpRight() != NULL){
+                    if(c->getUpRight()->getUpRight()->getCouleur() != '.'){
+                        if(c->getUpRight()->getUpRight()->getCouleur() == couleur_joueur){
+                            return true;
+                        }
+                        else{
+                            return verifie_la_prise_UpRight(c->getUpRight());
+                        }
+                    }
+                    else{
+                        return false;
+                    }
+                }
+                else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
+}
+
+bool Plateau::verifie_la_prise_DownLeft(Case* c){
+    if(c->getDownLeft() != NULL){
+        if(c->getDownLeft()->getCouleur() != '.'){
+            if(c->getDownLeft()->getCouleur() != couleur_joueur){
+                if(c->getDownLeft()->getDownLeft() != NULL){
+                    if(c->getDownLeft()->getDownLeft()->getCouleur() != '.'){
+                        if(c->getDownLeft()->getDownLeft()->getCouleur() == couleur_joueur){
+                            return true;
+                        }
+                        else{
+                            return verifie_la_prise_DownLeft(c->getDownLeft());
+                        }
+                    }
+                    else{
+                        return false;
+                    }
+                }
+                else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
+}
+
+bool Plateau::verifie_la_prise_DownRight(Case* c){
+    if(c->getDownRight() != NULL){
+        if(c->getDownRight()->getCouleur() != '.'){
+            if(c->getDownRight()->getCouleur() != couleur_joueur){
+                if(c->getDownRight()->getDownRight() != NULL){
+                    if(c->getDownRight()->getDownRight()->getCouleur() != '.'){
+                        if(c->getDownRight()->getDownRight()->getCouleur() == couleur_joueur){
+                            return true;
+                        }
+                        else{
+                            return verifie_la_prise_DownRight(c->getDownRight());
+                        }
+                    }
+                    else{
+                        return false;
+                    }
+                }
+                else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
+}
+
+void Plateau::capturePieceUp(Case* c){
+    while (c->getUp()->getCouleur() != couleur_joueur)
+    {
+        c->getUp()->setCouleur(couleur_joueur);
+        c = c->getUp();
+    }
+}
+
+void Plateau::capturePieceDown(Case* c){
+    while (c->getDown()->getCouleur() != couleur_joueur)
+    {
+        c->getDown()->setCouleur(couleur_joueur);
+        c = c->getDown();
+    }
+}
+
+void Plateau::capturePieceLeft(Case* c){
+    while (c->getLeft()->getCouleur() != couleur_joueur)
+    {
+        c->getLeft()->setCouleur(couleur_joueur);
+        c = c->getLeft();
+    }
+}
+
+void Plateau::capturePieceRight(Case* c){
+    while (c->getRight()->getCouleur() != couleur_joueur)
+    {
+        c->getRight()->setCouleur(couleur_joueur);
+        c = c->getRight();
+    }
+}
+
+void Plateau::capturePieceUpLeft(Case* c){
+    while (c->getUpLeft()->getCouleur() != couleur_joueur)
+    {
+        c->getUpLeft()->setCouleur(couleur_joueur);
+        c = c->getUpLeft();
+    }
+}
+
+void Plateau::capturePieceUpRight(Case* c){
+    while (c->getUpRight()->getCouleur() != couleur_joueur)
+    {
+        c->getUpRight()->setCouleur(couleur_joueur);
+        c = c->getUpRight();
+    }
+}
+
+void Plateau::capturePieceDownLeft(Case* c){
+    while (c->getDownLeft()->getCouleur() != couleur_joueur)
+    {
+        c->getDownLeft()->setCouleur(couleur_joueur);
+        c = c->getDownLeft();
+    }
+}
+
+void Plateau::capturePieceDownRight(Case* c){
+    while (c->getDownRight()->getCouleur() != couleur_joueur)
+    {
+        c->getDownRight()->setCouleur(couleur_joueur);
+        c = c->getDownRight();
+    }
+}
+
+bool Plateau::capturePieces(Case* c){
+    int i = 0;
+    if(verifie_la_prise_Up(c)){
+        capturePieceUp(c);
+        i++;
+    }
+    if (verifie_la_prise_Down(c)){
+        capturePieceDown(c);
+        i++;
+    }
+    if (verifie_la_prise_Left(c)){
+        capturePieceLeft(c);
+        i++;
+    }
+    if (verifie_la_prise_Right(c)){
+        capturePieceRight(c);
+        i++;
+    }
+    if (verifie_la_prise_UpLeft(c)){
+        capturePieceUpLeft(c);
+        i++;
+    }
+    if (verifie_la_prise_UpRight(c)){
+        capturePieceUpRight(c);
+        i++;
+    }
+    if (verifie_la_prise_DownLeft(c)){
+        capturePieceDownLeft(c);
+        i++;
+    }
+    if (verifie_la_prise_DownRight(c)){
+        capturePieceDownRight(c);
+        i++;
+    }
+    if(i == 0){
+        return false;
+    }
+    return true;
 }
