@@ -95,6 +95,7 @@ Plateau::Plateau()
     
 }
 
+/*
 void Plateau::initalise_voisin_cases()
 {
     for (char i='1'; i<'9'; i++)
@@ -166,7 +167,43 @@ void Plateau::initalise_voisin_cases()
             }
         }
     }
+}*/
+void Plateau::initialise_voisin_cases()
+{
+    for (char i='1'; i<'9'; i++)
+    {
+        for(char j='a'; j<'i'; j++)
+        {
+            string nom = "";
+            nom += j;
+            nom += i;
+            map<string, Case*>::iterator itr; //itérateur pour parcourir la map
+            itr = cases.find(nom); //recherche la case dans la map
+            
+            // check les voisins dans toutes les directions
+            setVoisins(itr, j, i-1, &Case::setUp);
+            setVoisins(itr, j, i+1, &Case::setDown);
+            setVoisins(itr, j-1, i, &Case::setLeft);
+            setVoisins(itr, j+1, i, &Case::setRight);
+            setVoisins(itr, j-1, i-1, &Case::setUpLeft);
+            setVoisins(itr, j+1, i-1, &Case::setUpRight);
+            setVoisins(itr, j-1, i+1, &Case::setDownLeft);
+            setVoisins(itr, j+1, i+1, &Case::setDownRight);
+        }
+    }
 }
+
+void Plateau::setVoisins(map<string, Case*>::iterator itr, char j, char i, void (Case::*setNeighbor)(Case*))
+{
+    string nom = "";
+    nom += j;
+    nom += i;
+    if (cases.find(nom) != cases.end())
+    {
+        (itr->second->*setNeighbor)(cases[nom]);
+    }
+}
+
 
 Plateau::~Plateau()
 {

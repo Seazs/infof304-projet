@@ -19,7 +19,9 @@ class Plateau
         void setCouleurJoueur(char couleur);
         void afficherPlateau();
         void ecoute_entree(); 
-        void initalise_voisin_cases();
+        void initialise_voisin_cases();
+        void setVoisins(map<string, Case*>::iterator itr, char j, char i, void (Case::*setNeighbor)(Case*));
+
         bool ajouterPiece(string nom, char couleur);
         bool ajouterPieceVirtuelle(string nom, char couleur);
         bool verifie_les_prises(Case* c);
