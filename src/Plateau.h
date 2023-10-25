@@ -33,6 +33,8 @@ class Plateau
         bool verifie_la_prise_UpRight(Case* c);
         bool verifie_la_prise_DownLeft(Case* c);
         bool verifie_la_prise_DownRight(Case* c);
+
+        void capturePiece(Case* c, Case* (Case::*getNeighbor)());
         bool capturePieces(Case* c);
         bool capturePiecesVirtuelle(Case* c);
         void capturePieceUp(Case* c);

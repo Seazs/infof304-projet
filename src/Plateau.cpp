@@ -328,88 +328,14 @@ bool Plateau::verifie_la_prise(Case* c, Case* (Case::*getNeighbor)()){
     return false;
 }
 
-bool Plateau::verifie_la_prise_Up(Case* c){
-    while (c->getUp() != NULL && c->getUp()->getCouleur() != '.' && c->getUp()->getCouleur() != couleur_joueur && c->getUp()->getUp() != NULL) {
-        c = c->getUp();
-        if (c->getUp()->getCouleur() == couleur_joueur) {
-            return true;
-        }
+
+void Plateau::capturePiece(Case* c, Case* (Case::*getNeighbor)()){
+    while ((c->*getNeighbor)()->getCouleur() != couleur_joueur)
+    {
+        (c->*getNeighbor)()->setCouleur(couleur_joueur);
+        c = (c->*getNeighbor)();
     }
-    return false;
 }
-
-bool Plateau::verifie_la_prise_Down(Case* c){
-    while (c->getDown() != NULL && c->getDown()->getCouleur() != '.' && c->getDown()->getCouleur() != couleur_joueur && c->getDown()->getDown() != NULL) {
-        c = c->getDown();
-        if (c->getDown()->getCouleur() == couleur_joueur) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool Plateau::verifie_la_prise_Left(Case* c){
-    while (c->getLeft() != NULL && c->getLeft()->getCouleur() != '.' && c->getLeft()->getCouleur() != couleur_joueur && c->getLeft()->getLeft() != NULL) {
-        c = c->getLeft();
-        if (c->getLeft()->getCouleur() == couleur_joueur) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool Plateau::verifie_la_prise_Right(Case* c){
-    while (c->getRight() != NULL && c->getRight()->getCouleur() != '.' && c->getRight()->getCouleur() != couleur_joueur && c->getRight()->getRight() != NULL) {
-        c = c->getRight();
-        if (c->getRight()->getCouleur() == couleur_joueur) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool Plateau::verifie_la_prise_UpLeft(Case* c){
-    while (c->getUpLeft() != NULL && c->getUpLeft()->getCouleur() != '.' && c->getUpLeft()->getCouleur() != couleur_joueur && c->getUpLeft()->getUpLeft() != NULL) {
-        c = c->getUpLeft();
-        if (c->getUpLeft()->getCouleur() == couleur_joueur) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool Plateau::verifie_la_prise_UpRight(Case* c){
-    while (c->getUpRight() != NULL && c->getUpRight()->getCouleur() != '.' && c->getUpRight()->getCouleur() != couleur_joueur && c->getUpRight()->getUpRight() != NULL) {
-        c = c->getUpRight();
-        if (c->getUpRight()->getCouleur() == couleur_joueur) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool Plateau::verifie_la_prise_DownLeft(Case* c){
-    while (c->getDownLeft() != NULL && c->getDownLeft()->getCouleur() != '.' && c->getDownLeft()->getCouleur() != couleur_joueur && c->getDownLeft()->getDownLeft() != NULL) {
-        c = c->getDownLeft();
-        if (c->getDownLeft()->getCouleur() == couleur_joueur) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool Plateau::verifie_la_prise_DownRight(Case* c){
-    while (c->getDownRight() != NULL && c->getDownRight()->getCouleur() != '.' && c->getDownRight()->getCouleur() != couleur_joueur && c->getDownRight()->getDownRight() != NULL) {
-        c = c->getDownRight();
-        if (c->getDownRight()->getCouleur() == couleur_joueur) {
-            return true;
-        }
-    }
-    return false;
-}
-
-
-
 
 void Plateau::capturePieceUp(Case* c){
     while (c->getUp()->getCouleur() != couleur_joueur)
@@ -478,38 +404,37 @@ void Plateau::capturePieceDownRight(Case* c){
 bool Plateau::capturePieces(Case* c){
     int i = 0;
     if(verifie_la_prise(c, &Case::getUp)){
-        capturePieceUp(c);
+        capturePiece(c, &Case::getUp);
         i++;
     }
     if (verifie_la_prise(c, &Case::getDown)){
-        capturePieceDown(c);
+        capturePiece(c, &Case::getDown);
         i++;
     }
     if (verifie_la_prise(c, &Case::getLeft)){
-        capturePieceLeft(c);
+        capturePiece(c, &Case::getLeft);
         i++;
     }
     if (verifie_la_prise(c, &Case::getRight)){
-        capturePieceRight(c);
+        capturePiece(c, &Case::getRight);
         i++;
     }
     if (verifie_la_prise(c, &Case::getUpLeft)){
-        capturePieceUpLeft(c);
+        capturePiece(c, &Case::getUpLeft);
         i++;
     }
     if (verifie_la_prise(c, &Case::getUpRight)){
-        capturePieceUpRight(c);
+        capturePiece(c, &Case::getUpRight);
         i++;
     }
     if (verifie_la_prise(c, &Case::getDownLeft)){
-        capturePieceDownLeft(c);
+        capturePiece(c, &Case::getDownLeft);
         i++;
     }
     if (verifie_la_prise(c, &Case::getDownRight)){
-        capturePieceDownRight(c);
+        capturePiece(c, &Case::getDownRight);
         i++;
     }
-    
     if(i == 0){
         return false;
     }
