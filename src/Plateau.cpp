@@ -317,7 +317,6 @@ bool Plateau::ajouterPieceVirtuelle(string nom, char couleur)
     }
 }
 
-
 bool Plateau::verifie_la_prise(Case* c, Case* (Case::*getNeighbor)()){
     while ((c->*getNeighbor)() != NULL && (c->*getNeighbor)()->getCouleur() != '.' && (c->*getNeighbor)()->getCouleur() != couleur_joueur && (c->*getNeighbor)()->getUp() != NULL) {
         c = (c->*getNeighbor)();
@@ -328,76 +327,11 @@ bool Plateau::verifie_la_prise(Case* c, Case* (Case::*getNeighbor)()){
     return false;
 }
 
-
 void Plateau::capturePiece(Case* c, Case* (Case::*getNeighbor)()){
     while ((c->*getNeighbor)()->getCouleur() != couleur_joueur)
     {
         (c->*getNeighbor)()->setCouleur(couleur_joueur);
         c = (c->*getNeighbor)();
-    }
-}
-
-void Plateau::capturePieceUp(Case* c){
-    while (c->getUp()->getCouleur() != couleur_joueur)
-    {
-        c->getUp()->setCouleur(couleur_joueur);
-        c = c->getUp();
-    }
-}
-
-void Plateau::capturePieceDown(Case* c){
-    while (c->getDown()->getCouleur() != couleur_joueur)
-    {
-        c->getDown()->setCouleur(couleur_joueur);
-        c = c->getDown();
-    }
-}
-
-void Plateau::capturePieceLeft(Case* c){
-    while (c->getLeft()->getCouleur() != couleur_joueur)
-    {
-        c->getLeft()->setCouleur(couleur_joueur);
-        c = c->getLeft();
-    }
-}
-
-void Plateau::capturePieceRight(Case* c){
-    while (c->getRight()->getCouleur() != couleur_joueur)
-    {
-        c->getRight()->setCouleur(couleur_joueur);
-        c = c->getRight();
-    }
-}
-
-void Plateau::capturePieceUpLeft(Case* c){
-    while (c->getUpLeft()->getCouleur() != couleur_joueur)
-    {
-        c->getUpLeft()->setCouleur(couleur_joueur);
-        c = c->getUpLeft();
-    }
-}
-
-void Plateau::capturePieceUpRight(Case* c){
-    while (c->getUpRight()->getCouleur() != couleur_joueur)
-    {
-        c->getUpRight()->setCouleur(couleur_joueur);
-        c = c->getUpRight();
-    }
-}
-
-void Plateau::capturePieceDownLeft(Case* c){
-    while (c->getDownLeft()->getCouleur() != couleur_joueur)
-    {
-        c->getDownLeft()->setCouleur(couleur_joueur);
-        c = c->getDownLeft();
-    }
-}
-
-void Plateau::capturePieceDownRight(Case* c){
-    while (c->getDownRight()->getCouleur() != couleur_joueur)
-    {
-        c->getDownRight()->setCouleur(couleur_joueur);
-        c = c->getDownRight();
     }
 }
 
