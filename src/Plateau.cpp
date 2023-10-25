@@ -91,7 +91,7 @@ Plateau::Plateau()
 
     //couleur du joueur qui commence
     setCouleurJoueur('X');
-    initalise_voisin_cases();
+    initialise_voisin_cases();
     
 }
 
