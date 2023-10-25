@@ -317,6 +317,17 @@ bool Plateau::ajouterPieceVirtuelle(string nom, char couleur)
     }
 }
 
+
+bool Plateau::verifie_la_prise(Case* c, Case* (Case::*getNeighbor)()){
+    while ((c->*getNeighbor)() != NULL && (c->*getNeighbor)()->getCouleur() != '.' && (c->*getNeighbor)()->getCouleur() != couleur_joueur && (c->*getNeighbor)()->getUp() != NULL) {
+        c = (c->*getNeighbor)();
+        if ((c->*getNeighbor)()->getCouleur() == couleur_joueur) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool Plateau::verifie_la_prise_Up(Case* c){
     while (c->getUp() != NULL && c->getUp()->getCouleur() != '.' && c->getUp()->getCouleur() != couleur_joueur && c->getUp()->getUp() != NULL) {
         c = c->getUp();
@@ -466,38 +477,39 @@ void Plateau::capturePieceDownRight(Case* c){
 
 bool Plateau::capturePieces(Case* c){
     int i = 0;
-    if(verifie_la_prise_Up(c)){
+    if(verifie_la_prise(c, &Case::getUp)){
         capturePieceUp(c);
         i++;
     }
-    if (verifie_la_prise_Down(c)){
+    if (verifie_la_prise(c, &Case::getDown)){
         capturePieceDown(c);
         i++;
     }
-    if (verifie_la_prise_Left(c)){
+    if (verifie_la_prise(c, &Case::getLeft)){
         capturePieceLeft(c);
         i++;
     }
-    if (verifie_la_prise_Right(c)){
+    if (verifie_la_prise(c, &Case::getRight)){
         capturePieceRight(c);
         i++;
     }
-    if (verifie_la_prise_UpLeft(c)){
+    if (verifie_la_prise(c, &Case::getUpLeft)){
         capturePieceUpLeft(c);
         i++;
     }
-    if (verifie_la_prise_UpRight(c)){
+    if (verifie_la_prise(c, &Case::getUpRight)){
         capturePieceUpRight(c);
         i++;
     }
-    if (verifie_la_prise_DownLeft(c)){
+    if (verifie_la_prise(c, &Case::getDownLeft)){
         capturePieceDownLeft(c);
         i++;
     }
-    if (verifie_la_prise_DownRight(c)){
+    if (verifie_la_prise(c, &Case::getDownRight)){
         capturePieceDownRight(c);
         i++;
     }
+    
     if(i == 0){
         return false;
     }
@@ -506,28 +518,28 @@ bool Plateau::capturePieces(Case* c){
 
 bool Plateau::capturePiecesVirtuelle(Case* c){
     int i = 0;
-    if(verifie_la_prise_Up(c)){
+    if(verifie_la_prise(c, &Case::getUp)){
         i++;
     }
-    if (verifie_la_prise_Down(c)){
+    if (verifie_la_prise(c, &Case::getDown)){
         i++;
     }
-    if (verifie_la_prise_Left(c)){
+    if (verifie_la_prise(c, &Case::getLeft)){
         i++;
     }
-    if (verifie_la_prise_Right(c)){
+    if (verifie_la_prise(c, &Case::getRight)){
         i++;
     }
-    if (verifie_la_prise_UpLeft(c)){
+    if (verifie_la_prise(c, &Case::getUpLeft)){
         i++;
     }
-    if (verifie_la_prise_UpRight(c)){
+    if (verifie_la_prise(c, &Case::getUpRight)){
         i++;
     }
-    if (verifie_la_prise_DownLeft(c)){
+    if (verifie_la_prise(c, &Case::getDownLeft)){
         i++;
     }
-    if (verifie_la_prise_DownRight(c)){
+    if (verifie_la_prise(c, &Case::getDownRight)){
         i++;
     }
     if(i == 0){

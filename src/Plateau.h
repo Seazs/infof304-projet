@@ -24,7 +24,7 @@ class Plateau
 
         bool ajouterPiece(string nom, char couleur);
         bool ajouterPieceVirtuelle(string nom, char couleur);
-        bool verifie_les_prises(Case* c);
+        bool verifie_la_prise(Case* c, Case* (Case::*setNeighbor)());
         bool verifie_la_prise_Up(Case* c);
         bool verifie_la_prise_Down(Case* c);
         bool verifie_la_prise_Left(Case* c);
