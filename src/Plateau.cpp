@@ -318,34 +318,14 @@ bool Plateau::ajouterPieceVirtuelle(string nom, char couleur)
 }
 
 bool Plateau::verifie_la_prise_Up(Case* c){
-    if(c->getUp() != NULL){
-        if(c->getUp()->getCouleur() != '.'){
-            if(c->getUp()->getCouleur() != couleur_joueur){
-                if(c->getUp()->getUp() != NULL){
-                    if(c->getUp()->getUp()->getCouleur() != '.'){
-                        if(c->getUp()->getUp()->getCouleur() == couleur_joueur){
-                            return true;
-                        }
-                        else{
-                            return verifie_la_prise_Up(c->getUp());
-                        }
-                    }
-                    else{
-                        return false;
-                    }
-                }
-                else{
-                    return false;
-                }
-            }
-            else{
-                return false;
-            }
+    if(c->getUp() != NULL && c->getUp()->getCouleur() != '.' && c->getUp()->getCouleur() != couleur_joueur && c->getUp()->getUp() != NULL && c->getUp()->getUp()->getCouleur() != '.'){
+        if(c->getUp()->getUp()->getCouleur() == couleur_joueur){
+            return true;
         }
         else{
-            return false;
+            return verifie_la_prise_Up(c->getUp());
         }
-    }
+    }   
     else{
         return false;
     }
