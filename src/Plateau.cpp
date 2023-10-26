@@ -26,7 +26,7 @@ Plateau::Plateau()
     cases["d5"]->setCouleur('X');
     cases["e5"]->setCouleur('O');
 
-/*
+
     cases["a1"]->setCouleur('O');
     cases["a2"]->setCouleur('X');
     cases["a3"]->setCouleur('X');
@@ -87,7 +87,7 @@ Plateau::Plateau()
     cases["h2"]->setCouleur('X');
     cases["h3"]->setCouleur('X');
     cases["h4"]->setCouleur('X');
-*/
+
 
     //couleur du joueur qui commence
     setCouleurJoueur('X');
@@ -95,79 +95,7 @@ Plateau::Plateau()
     
 }
 
-/*
-void Plateau::initalise_voisin_cases()
-{
-    for (char i='1'; i<'9'; i++)
-    {
-        for(char j='a'; j<'i'; j++)
-        {
-            string nom = "";
-            nom += j;
-            nom += i;
-            map<string, Case*>::iterator itr; //itérateur pour parcourir la map
-            itr = cases.find(nom); //recherche la case dans la map
-            string nomUp = "";
-            nomUp += j;
-            nomUp += (i-1);
-            string nomDown = "";
-            nomDown += j;
-            nomDown += (i+1);
-            string nomLeft = "";
-            nomLeft += (j-1);
-            nomLeft += i;
-            string nomRight = "";
-            nomRight += (j+1);
-            nomRight += i;
-            string nomUpLeft = "";
-            nomUpLeft += (j-1);
-            nomUpLeft += (i-1);
-            string nomUpRight = "";
-            nomUpRight += (j+1);
-            nomUpRight += (i-1);
-            string nomDownLeft = "";
-            nomDownLeft += (j-1);
-            nomDownLeft += (i+1);
-            string nomDownRight = "";
-            nomDownRight += (j+1);
-            nomDownRight += (i+1);
-            
-            //si la case existe
-            if (cases.find(nomUp) != cases.end())
-            {
-                itr->second->setUp(cases[nomUp]);
-            }
-            if (cases.find(nomDown) != cases.end())
-            {
-                itr->second->setDown(cases[nomDown]);
-            }
-            if (cases.find(nomLeft) != cases.end())
-            {
-                itr->second->setLeft(cases[nomLeft]);
-            }
-            if (cases.find(nomRight) != cases.end())
-            {
-                itr->second->setRight(cases[nomRight]);
-            }
-            if (cases.find(nomUpLeft) != cases.end())
-            {
-                itr->second->setUpLeft(cases[nomUpLeft]);
-            }
-            if (cases.find(nomUpRight) != cases.end())
-            {
-                itr->second->setUpRight(cases[nomUpRight]);
-            }
-            if (cases.find(nomDownLeft) != cases.end())
-            {
-                itr->second->setDownLeft(cases[nomDownLeft]);
-            }
-            if (cases.find(nomDownRight) != cases.end())
-            {
-                itr->second->setDownRight(cases[nomDownRight]);
-            }
-        }
-    }
-}*/
+
 void Plateau::initialise_voisin_cases()
 {
     for (char i='1'; i<'9'; i++)
@@ -237,7 +165,19 @@ void Plateau::afficherPlateau()
         cout << i << endl;
     }
     cout << "  a b c d e f g h" << endl;
-}
+
+    //test des voisins
+    itr = cases.find("a2");
+    cout << "au dessus: " <<itr->second->getUp()->getNom() << endl;
+    cout << "en dessous: " <<itr->second->getDown()->getNom() << endl;
+    cout << "à gauche: " <<itr->second->getLeft()->getNom() << endl;
+    cout << "à droite: " <<itr->second->getRight()->getNom() << endl;
+    cout << "en haut à gauche: " <<itr->second->getUpLeft()->getNom() << endl;
+    cout << "en haut à droite: " <<itr->second->getUpRight()->getNom() << endl;
+    cout << "en bas à gauche: " <<itr->second->getDownLeft()->getNom() << endl;
+    cout << "en bas à droite: " <<itr->second->getDownRight()->getNom() << endl;
+
+}   
 
 void Plateau::ecoute_entree()
 {
@@ -318,6 +258,7 @@ bool Plateau::ajouterPieceVirtuelle(string nom, char couleur)
 }
 
 bool Plateau::verifie_la_prise(Case* c, Case* (Case::*getNeighbor)()){
+    //cout << "verifie_la_prise" << endl;
     while ((c->*getNeighbor)() != NULL && (c->*getNeighbor)()->getCouleur() != '.' && (c->*getNeighbor)()->getCouleur() != couleur_joueur && (c->*getNeighbor)()->getUp() != NULL) {
         c = (c->*getNeighbor)();
         if ((c->*getNeighbor)()->getCouleur() == couleur_joueur) {
@@ -328,6 +269,7 @@ bool Plateau::verifie_la_prise(Case* c, Case* (Case::*getNeighbor)()){
 }
 
 void Plateau::capturePiece(Case* c, Case* (Case::*getNeighbor)()){
+    //cout << "capturePiece" << endl;
     while ((c->*getNeighbor)()->getCouleur() != couleur_joueur)
     {
         (c->*getNeighbor)()->setCouleur(couleur_joueur);
@@ -416,6 +358,7 @@ bool Plateau::verifie_si_le_joueur_peut_jouer(char couleur){
             string nom = "";
             nom += (char)(j + 96);
             nom += (char)(i + 48);
+            cout << nom << endl;
             itr = cases.find(nom); //recherche la case dans la map
             if(ajouterPieceVirtuelle(nom, couleur)){
                 return true;   
