@@ -63,7 +63,7 @@ void Case::setDownRight(Case* downRight)
 
 string Case::getNom()
 {
-    return nom;
+        return nom;
 }
 
 Case* Case::getUp()
@@ -78,7 +78,7 @@ Case* Case::getDown()
 
 Case* Case::getLeft()
 {
-    return left;
+        return left;
 }
 
 Case* Case::getRight()
