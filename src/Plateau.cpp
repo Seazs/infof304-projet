@@ -165,18 +165,6 @@ void Plateau::afficherPlateau()
         cout << i << endl;
     }
     cout << "  a b c d e f g h" << endl;
-
-    //test des voisins
-    itr = cases.find("a2");
-    cout << "au dessus: " <<itr->second->getUp()->getNom() << endl;
-    cout << "en dessous: " <<itr->second->getDown()->getNom() << endl;
-    cout << "à gauche: " <<itr->second->getLeft()->getNom() << endl;
-    cout << "à droite: " <<itr->second->getRight()->getNom() << endl;
-    cout << "en haut à gauche: " <<itr->second->getUpLeft()->getNom() << endl;
-    cout << "en haut à droite: " <<itr->second->getUpRight()->getNom() << endl;
-    cout << "en bas à gauche: " <<itr->second->getDownLeft()->getNom() << endl;
-    cout << "en bas à droite: " <<itr->second->getDownRight()->getNom() << endl;
-
 }   
 
 void Plateau::ecoute_entree()
@@ -258,8 +246,7 @@ bool Plateau::ajouterPieceVirtuelle(string nom, char couleur)
 }
 
 bool Plateau::verifie_la_prise(Case* c, Case* (Case::*getNeighbor)()){
-    //cout << "verifie_la_prise" << endl;
-    while ((c->*getNeighbor)() != NULL && (c->*getNeighbor)()->getCouleur() != '.' && (c->*getNeighbor)()->getCouleur() != couleur_joueur && (c->*getNeighbor)()->getUp() != NULL) {
+    while ((c->*getNeighbor)() != NULL && (c->*getNeighbor)()->getCouleur() != '.' && (c->*getNeighbor)()->getCouleur() != couleur_joueur && ((c->*getNeighbor)()->*getNeighbor)() != NULL) {
         c = (c->*getNeighbor)();
         if ((c->*getNeighbor)()->getCouleur() == couleur_joueur) {
             return true;
@@ -269,7 +256,6 @@ bool Plateau::verifie_la_prise(Case* c, Case* (Case::*getNeighbor)()){
 }
 
 void Plateau::capturePiece(Case* c, Case* (Case::*getNeighbor)()){
-    //cout << "capturePiece" << endl;
     while ((c->*getNeighbor)()->getCouleur() != couleur_joueur)
     {
         (c->*getNeighbor)()->setCouleur(couleur_joueur);
@@ -358,7 +344,6 @@ bool Plateau::verifie_si_le_joueur_peut_jouer(char couleur){
             string nom = "";
             nom += (char)(j + 96);
             nom += (char)(i + 48);
-            cout << nom << endl;
             itr = cases.find(nom); //recherche la case dans la map
             if(ajouterPieceVirtuelle(nom, couleur)){
                 return true;   
