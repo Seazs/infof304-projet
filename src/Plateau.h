@@ -17,7 +17,7 @@ class Plateau
 
     public:
         Plateau();
-        Plateau(Plateau& plateau);
+        Plateau(const Plateau& plateau);
         ~Plateau();
         void setCouleurJoueur(char couleur);
         char getCouleurJoueur();
@@ -27,6 +27,7 @@ class Plateau
         void ecoute_entree(); 
         void initialise_voisin_cases();
         void setVoisins(map<string, Case*>::iterator itr, char j, char i, void (Case::*setNeighbor)(Case*));
+        list <Plateau*> getBranches();
 
         //fonctions de jeu
         bool ajouterPiece(string nom, char couleur);

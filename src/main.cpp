@@ -26,20 +26,19 @@ int main()
             p.affiche_score();
             break;
         }
-        cout << "C'est au joueur " << type_du_joueur_qui_joue << " de jouer" << endl;
         
         if(type_du_joueur_qui_joue == 'H'){
             p.ecoute_entree();
         }
         else if(type_du_joueur_qui_joue == 'A'){
-            p.regarde_le_futur(p, p.getCouleurJoueur(), 1);
+            p.regarde_le_futur(p, p.getCouleurJoueur(), 0);
         }
         else if(type_du_joueur_qui_joue == 'F'){
             p.ecoute_entree();
         }
 
-        cout << "vrai plateau" << endl;
-        p.afficherPlateau();
+        //cout << "vrai plateau" << endl;
+        //p.afficherPlateau();
         if(type_du_joueur_qui_joue == joueur1){
             type_du_joueur_qui_joue = joueur2;
         }
