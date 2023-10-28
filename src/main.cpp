@@ -18,7 +18,7 @@ int main()
         return 0;
     }
     char type_du_joueur_qui_joue = joueur1;
-    Plateau p;
+    Plateau p = Plateau();
     p.afficherPlateau();
     while (true)
     {
@@ -31,7 +31,7 @@ int main()
             p.ecoute_entree();
         }
         else if(type_du_joueur_qui_joue == 'A'){
-            p.regarde_le_futur(p, p.getCouleurJoueur(), 0);
+            p.regarde_le_futur(p.getCouleurJoueur(), 0);
         }
         else if(type_du_joueur_qui_joue == 'F'){
             p.ecoute_entree();

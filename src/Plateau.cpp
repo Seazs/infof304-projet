@@ -102,7 +102,9 @@ Plateau::Plateau(const Plateau& plateau){
     Case* nouvelle_case = new Case(*(paire.second)); // Supposons que Case a un constructeur de copie approprié
     cases[paire.first] = nouvelle_case;
     }
-    setCouleurJoueur(this->couleur_joueur);
+    char couleur = plateau.getCouleurJoueur();
+
+    this->setCouleurJoueur(plateau.getCouleurJoueur());
 }
 
 Plateau::~Plateau()
@@ -111,10 +113,10 @@ Plateau::~Plateau()
 }
 
 void Plateau::setCouleurJoueur(char couleur){
-    couleur_joueur = couleur;
+    this->couleur_joueur = couleur;
 }
 
-char Plateau::getCouleurJoueur(){
+char Plateau::getCouleurJoueur() const {
     return couleur_joueur;
 }
 
@@ -207,6 +209,21 @@ void Plateau::ecoute_entree()
 
 bool Plateau::ajouterPiece(string nom, char couleur)
 {
+    Case* c = cases[nom];
+    cout << "les voisins de " << nom << " sont : " << endl;
+    if(c->getUp() != NULL){
+        cout << c->getUp()->getNom() << endl;
+    }
+    if(c->getDown() != NULL){
+        cout << c->getDown()->getNom() << endl;
+    }
+    if(c->getLeft() != NULL){
+        cout << c->getLeft()->getNom() << endl;
+    }
+    if(c->getRight() != NULL){
+        cout << c->getRight()->getNom() << endl;
+    }
+
     map<string, Case*>::iterator itr; //itérateur pour parcourir la map
     itr = this->cases.find(nom); //recherche la case dans la map
     if (itr != this->cases.end()) //si la case existe
@@ -238,19 +255,32 @@ bool Plateau::ajouterPiece(string nom, char couleur)
 
 bool Plateau::capturePieces(Case* c){
     int i = 0;
+    if(c->getDown() != NULL){
+        if(c->getDown()->getDown() != NULL){
+            cout << "deuxieme down :" << endl;
+            cout << c->getDown()->getDown()->getNom() << "avec la couleur" << c->getDown()->getDown()->getCouleur() <<  endl;
+            cout << "couleur joueur : " << couleur_joueur << endl;
+
+
+        }
+    }
     if(verifie_la_prise(c, &Case::getUp)){
+        cout << "up" << endl;
         capturePiece(c, &Case::getUp);
         i++;
     }
     if (verifie_la_prise(c, &Case::getDown)){
+        cout << "down" << endl;
         capturePiece(c, &Case::getDown);
         i++;
     }
     if (verifie_la_prise(c, &Case::getLeft)){
+        cout << "left" << endl;
         capturePiece(c, &Case::getLeft);
         i++;
     }
     if (verifie_la_prise(c, &Case::getRight)){
+        cout << "right" << endl;
         capturePiece(c, &Case::getRight);
         i++;
     }
@@ -438,7 +468,7 @@ void Plateau::affiche_score(){
 
 
 
-void Plateau::regarde_le_futur(Plateau plateau, char couleur, int profondeur){
+void Plateau::regarde_le_futur(char couleur, int profondeur){
     char couleur_joueur_virtuel = couleur;
     map<string, Case*>::iterator itr; //itérateur pour parcourir la map
     for(int i=1; i<9; i++){
@@ -449,12 +479,14 @@ void Plateau::regarde_le_futur(Plateau plateau, char couleur, int profondeur){
             itr = this->cases.find(nom); //recherche la case dans la map
             if(ajouterPieceVirtuelle(nom, couleur) == true){
                 cout << nom << endl;
-                Plateau p_virtuel(plateau);
+                Plateau p_virtuel(*this);
+                cout << "lala" << endl;
                 p_virtuel.ajouterPiece(nom, couleur);
+                cout << "lala" << endl;
                 //p_virtuel.afficherPlateau();
-                plateau.branches.push_back(&p_virtuel);
+                this->branches.push_back(&p_virtuel);
                 if(profondeur > 0){
-                    p_virtuel.regarde_le_futur(p_virtuel, couleur_joueur_virtuel, profondeur-1);
+                    p_virtuel.regarde_le_futur(couleur_joueur_virtuel, profondeur-1);
                     
                 }
             }

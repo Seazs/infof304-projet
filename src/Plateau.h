@@ -20,7 +20,7 @@ class Plateau
         Plateau(const Plateau& plateau);
         ~Plateau();
         void setCouleurJoueur(char couleur);
-        char getCouleurJoueur();
+        char getCouleurJoueur() const ;
         void setCases(map<string, Case*> cases);
         map<string, Case*> getCases();
         void afficherPlateau();
@@ -47,6 +47,6 @@ class Plateau
         void affiche_score();
 
         //fonctions d'intelligence artificielle
-        void regarde_le_futur(Plateau plateau, char couleur, int profondeur);
+        void regarde_le_futur(char couleur, int profondeur);
 
 };
