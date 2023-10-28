@@ -274,7 +274,7 @@ bool Plateau::capturePieces(Case* c){
 
 bool Plateau::verifie_la_prise(Case* c, Case* (Case::*getNeighbor)()){
     while ((c->*getNeighbor)() != NULL && ((c->*getNeighbor)())->getCouleur() != '.' && ((c->*getNeighbor)())->getCouleur() != getCouleurJoueur() && ((c->*getNeighbor)()->*getNeighbor)() != NULL) {
-        cout << "while" << c->getNom() << endl;
+        cout << "while " << c->getNom() << endl;
         c = (c->*getNeighbor)();
         if ((c->*getNeighbor)()->getCouleur() == couleur_joueur) {
             cout << "if" << endl;
