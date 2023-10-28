@@ -99,7 +99,12 @@ Plateau::Plateau(const Plateau& plateau){
     //deep Copy the content of the Plateau pointed to by p to this Plateau object
     for (const auto& paire : plateau.cases) {
         // Vous devez cloner chaque élément de la map en profondeur
+
+    // ATTENTION PAS DE CARBAGE COLECTOR DONC CES CASES CREES SUR LE TAS NE SERONT JAMAIS DETRUITES
+
     Case* nouvelle_case = new Case(*(paire.second)); // Supposons que Case a un constructeur de copie approprié
+
+    
     cases[paire.first] = nouvelle_case;
     }
     char couleur = plateau.getCouleurJoueur();
@@ -209,21 +214,6 @@ void Plateau::ecoute_entree()
 
 bool Plateau::ajouterPiece(string nom, char couleur)
 {
-    Case* c = cases[nom];
-    cout << "les voisins de " << nom << " sont : " << endl;
-    if(c->getUp() != NULL){
-        cout << c->getUp()->getNom() << endl;
-    }
-    if(c->getDown() != NULL){
-        cout << c->getDown()->getNom() << endl;
-    }
-    if(c->getLeft() != NULL){
-        cout << c->getLeft()->getNom() << endl;
-    }
-    if(c->getRight() != NULL){
-        cout << c->getRight()->getNom() << endl;
-    }
-
     map<string, Case*>::iterator itr; //itérateur pour parcourir la map
     itr = this->cases.find(nom); //recherche la case dans la map
     if (itr != this->cases.end()) //si la case existe
@@ -255,32 +245,19 @@ bool Plateau::ajouterPiece(string nom, char couleur)
 
 bool Plateau::capturePieces(Case* c){
     int i = 0;
-    if(c->getDown() != NULL){
-        if(c->getDown()->getDown() != NULL){
-            cout << "deuxieme down :" << endl;
-            cout << c->getDown()->getDown()->getNom() << "avec la couleur" << c->getDown()->getDown()->getCouleur() <<  endl;
-            cout << "couleur joueur : " << couleur_joueur << endl;
-
-
-        }
-    }
     if(verifie_la_prise(c, &Case::getUp)){
-        cout << "up" << endl;
         capturePiece(c, &Case::getUp);
         i++;
     }
     if (verifie_la_prise(c, &Case::getDown)){
-        cout << "down" << endl;
         capturePiece(c, &Case::getDown);
         i++;
     }
     if (verifie_la_prise(c, &Case::getLeft)){
-        cout << "left" << endl;
         capturePiece(c, &Case::getLeft);
         i++;
     }
     if (verifie_la_prise(c, &Case::getRight)){
-        cout << "right" << endl;
         capturePiece(c, &Case::getRight);
         i++;
     }
@@ -307,7 +284,7 @@ bool Plateau::capturePieces(Case* c){
 }
 
 bool Plateau::verifie_la_prise(Case* c, Case* (Case::*getNeighbor)()){
-    while ((c->*getNeighbor)() != NULL && ((c->*getNeighbor)())->getCouleur() != '.' && ((c->*getNeighbor)())->getCouleur() != getCouleurJoueur() && ((c->*getNeighbor)()->*getNeighbor)() != NULL) {
+    while ((c->*getNeighbor)() != NULL && ((c->*getNeighbor)())->getCouleur() != '.' && ((c->*getNeighbor)())->getCouleur() != this->couleur_joueur && ((c->*getNeighbor)()->*getNeighbor)() != NULL) {
         c = (c->*getNeighbor)();
         if ((c->*getNeighbor)()->getCouleur() == couleur_joueur) {
             cout << c->getNom() << " est mangeable" << endl;
@@ -476,13 +453,13 @@ void Plateau::regarde_le_futur(char couleur, int profondeur){
             string nom = "";    
             nom += (char)(j + 96);
             nom += (char)(i + 48);
-            itr = this->cases.find(nom); //recherche la case dans la map
+            itr = this->cases.find(nom); //recherche la case dans la map          
             if(ajouterPieceVirtuelle(nom, couleur) == true){
                 cout << nom << endl;
                 Plateau p_virtuel(*this);
-                cout << "lala" << endl;
-                p_virtuel.ajouterPiece(nom, couleur);
-                cout << "lala" << endl;
+                p_virtuel.ajouterPiece(nom, couleur); //les couleurs pieces sont soit ajouté dans le plateau original soit les copies de plateau sont un seul plateau 
+                                                        //donc c'est pas ouf
+                p_virtuel.afficherPlateau();
                 //p_virtuel.afficherPlateau();
                 this->branches.push_back(&p_virtuel);
                 if(profondeur > 0){
@@ -491,6 +468,7 @@ void Plateau::regarde_le_futur(char couleur, int profondeur){
                 }
             }
         }
+        
     }
 }
 

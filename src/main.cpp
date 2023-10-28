@@ -29,6 +29,7 @@ int main()
         
         if(type_du_joueur_qui_joue == 'H'){
             p.ecoute_entree();
+            p.afficherPlateau();
         }
         else if(type_du_joueur_qui_joue == 'A'){
             p.regarde_le_futur(p.getCouleurJoueur(), 0);
