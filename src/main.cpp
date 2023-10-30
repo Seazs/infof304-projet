@@ -31,14 +31,18 @@ int main()
             p.ecoute_entree();
         }
         else if(type_du_joueur_qui_joue == 'A'){
-            p.regarde_le_futur(p, p.getCouleurJoueur(), 0);
+            p.regarde_le_futur(p, p.getCouleurJoueur(),2);
+            //boucle qui parcourt les branches du plateau et qui affiche le score de chaque branche
+            for (list<Plateau*>::iterator it = p.getBranches().begin(); it != p.getBranches().end(); it++)
+            {
+                cout << "score de la branche : " << (*it)->getevaluation_score() << endl;
+            }
         }
         else if(type_du_joueur_qui_joue == 'F'){
             p.ecoute_entree();
         }
-
-        //cout << "vrai plateau" << endl;
-        //p.afficherPlateau();
+        cout << "vrai plateau" << endl;
+        p.afficherPlateau();
         if(type_du_joueur_qui_joue == joueur1){
             type_du_joueur_qui_joue = joueur2;
         }

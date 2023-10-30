@@ -13,21 +13,25 @@ class Plateau
         map<string, Case*> cases;
         char couleur_joueur;
         Plateau* root = NULL;
-        list <Plateau*> branches;
+        list<Plateau*> branches = {};
+        int evaluation_score;
 
     public:
         Plateau();
-        Plateau(const Plateau& plateau);
+        Plateau(Plateau& plateau);
         ~Plateau();
+        list<Plateau*> getBranches();
         void setCouleurJoueur(char couleur);
         char getCouleurJoueur();
+        void changeCouleurJoueur();
         void setCases(map<string, Case*> cases);
         map<string, Case*> getCases();
         void afficherPlateau();
         void ecoute_entree(); 
         void initialise_voisin_cases();
         void setVoisins(map<string, Case*>::iterator itr, char j, char i, void (Case::*setNeighbor)(Case*));
-        list <Plateau*> getBranches();
+        void setevaluation_score(int score);
+        int getevaluation_score();
 
         //fonctions de jeu
         bool ajouterPiece(string nom, char couleur);
@@ -48,5 +52,9 @@ class Plateau
 
         //fonctions d'intelligence artificielle
         void regarde_le_futur(Plateau plateau, char couleur, int profondeur);
+        int evaluation(char couleur);
+        Plateau* meilleur_coup(Plateau racine, int profondeur);
+        int minimax(Plateau plateau, int profondeur, bool maximisant);
+    
 
 };
