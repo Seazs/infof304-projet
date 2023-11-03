@@ -2,7 +2,7 @@
 CC = g++
 
 # Options de compilation
-CFLAGS = -Wall -g -std=c++11
+CFLAGS = -Wall
 
 # Répertoire pour les fichiers objet
 OBJ_DIR = obj
