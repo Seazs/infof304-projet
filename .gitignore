@@ -2,6 +2,10 @@
 /projetprelim
 /projet
 /projetgraph
+/obj
 
 # Object files
 *.o
+
+#executables
+./projetprelim
