@@ -32,6 +32,8 @@ class Plateau
         void setVoisins(map<string, Case*>::iterator itr, char j, char i, void (Case::*setNeighbor)(Case*));
         void setevaluation_score(int score);
         int getevaluation_score();
+        void ajoute_branche(Plateau* branche);
+        void tour_ia(int profondeur);
 
         //fonctions de jeu
         bool ajouterPiece(string nom, char couleur);
@@ -51,10 +53,8 @@ class Plateau
         void affiche_score();
 
         //fonctions d'intelligence artificielle
-        void regarde_le_futur(Plateau plateau, char couleur, int profondeur);
-        int evaluation(char couleur);
-        Plateau* meilleur_coup(Plateau racine, int profondeur);
-        int minimax(Plateau plateau, int profondeur, bool maximisant);
+        void regarde_le_futur(char couleur, int profondeur);
+        int evaluation();
     
 
 };

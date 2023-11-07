@@ -95,6 +95,7 @@ Plateau::Plateau()
     //couleur du joueur qui commence
     setCouleurJoueur('X');
     initialise_voisin_cases();
+    setevaluation_score(0);
 }
 
 Plateau::Plateau(Plateau& plateau){
@@ -106,6 +107,7 @@ Plateau::Plateau(Plateau& plateau){
     }
     couleur_joueur = plateau.couleur_joueur;
     initialise_voisin_cases();
+    setevaluation_score(0);
 }
 
 Plateau::~Plateau()
@@ -197,14 +199,6 @@ void Plateau::ecoute_entree()
     {
         cout << "Entrez le nom de la case à modifier du joueur " << couleur_joueur << " : " ;
         cin >> nom_case;
-    }
-    if (couleur_joueur == 'X')
-    {
-        couleur_joueur = 'O';
-    }
-    else
-    {
-        couleur_joueur = 'X';
     }
 }
 
@@ -321,14 +315,6 @@ bool Plateau::passe_le_tour(){
     }
     else{
         cout << "Le joueur " << getCouleurJoueur() << " ne peut pas jouer, il passe son tour" << endl;
-        if (couleur_joueur == 'X')
-        {
-            couleur_joueur = 'O';
-        }
-        else
-        {
-            couleur_joueur = 'X';
-        }
         return true;
     }
 }
@@ -439,9 +425,11 @@ void Plateau::affiche_score(){
     }
 }
 
+void Plateau::ajoute_branche(Plateau* branche){
+    branches.push_back(branche);
+}
 
-
-void Plateau::regarde_le_futur(Plateau plateau, char couleur, int profondeur){
+void Plateau::regarde_le_futur(char couleur, int profondeur){
     char couleur_joueur_virtuel = couleur;
     map<string, Case*>::iterator itr; //itérateur pour parcourir la map
     for(int i=1; i<9; i++){
@@ -451,12 +439,10 @@ void Plateau::regarde_le_futur(Plateau plateau, char couleur, int profondeur){
             nom += (char)(i + 48);
             itr = cases.find(nom); //recherche la case dans la map
             if(ajouterPieceVirtuelle(nom, couleur) == true){
-                Plateau p_virtuel(plateau);
-                p_virtuel.ajouterPiece_silencieux(nom, couleur);
-                //cout << "faux plateau" << endl;
-                //p_virtuel.afficherPlateau();
-                plateau.branches.push_back(&p_virtuel);
-                p_virtuel.root = &plateau;
+                Plateau* p_virtuel = new Plateau(*this);
+                p_virtuel->ajouterPiece_silencieux(nom, couleur);
+                ajoute_branche(p_virtuel);
+                p_virtuel->root = this;
                 if(profondeur > 0){
                     if (couleur_joueur_virtuel == 'X')
                     {
@@ -466,8 +452,8 @@ void Plateau::regarde_le_futur(Plateau plateau, char couleur, int profondeur){
                     {
                         couleur_joueur_virtuel = 'X';
                     }
-                    p_virtuel.setCouleurJoueur(couleur_joueur_virtuel);
-                    p_virtuel.regarde_le_futur(p_virtuel, couleur_joueur_virtuel, profondeur-1);
+                    p_virtuel->setCouleurJoueur(couleur_joueur_virtuel);
+                    p_virtuel->regarde_le_futur(couleur_joueur_virtuel, profondeur-1);
                     if (couleur_joueur_virtuel == 'X')
                     {
                         couleur_joueur_virtuel = 'O';
@@ -476,20 +462,44 @@ void Plateau::regarde_le_futur(Plateau plateau, char couleur, int profondeur){
                     {
                         couleur_joueur_virtuel = 'X';
                     }
-                    p_virtuel.setCouleurJoueur(couleur_joueur_virtuel);   
+                    p_virtuel->setCouleurJoueur(couleur_joueur_virtuel);   
                 }
                 else{
-                    p_virtuel.setevaluation_score(p_virtuel.evaluation(couleur));
+                    p_virtuel->setevaluation_score(p_virtuel->evaluation());
+                    //break;
                 }
             }
         }
     }
-    for(Plateau* branche : plateau.branches){
-        if(branche->getevaluation_score() > plateau.getevaluation_score()){
-            plateau.setevaluation_score(branche->getevaluation_score());
+    if(couleur_joueur_virtuel == 'X'){
+        for(Plateau* branche : getBranches()){
+            if(branche->getevaluation_score() > getevaluation_score()){
+                setevaluation_score(branche->getevaluation_score());
+                //cout << "nouveau score : " << getevaluation_score() << endl;
+            }
         }
     }
-    return;
+    else{
+        for(Plateau* branche : branches){
+            if(branche->getevaluation_score() < getevaluation_score()){
+                setevaluation_score(branche->getevaluation_score());
+                cout << "nouveau score 2 : " << getevaluation_score() << endl;
+            }
+        }
+    }
+    /*
+    //si les branches ont des branches, on les supprime
+    for(Plateau* branche : branches){
+        if(branche->getBranches().size() > 0){
+            for(Plateau* branche2 : branche->getBranches()){
+                delete branche2;
+            }
+            branche->getBranches().clear();
+        }
+    }
+    */
+//ecrit le score du plateau
+cout << "score du plateau : " << getevaluation_score() << endl;
 }
 
 list<Plateau*> Plateau::getBranches(){
@@ -523,40 +533,37 @@ bool Plateau::ajouterPiece_silencieux(string nom, char couleur)
     }
 }
 
-int Plateau::evaluation(char couleur){
+int Plateau::evaluation(){
     int score = 0;
-    if(couleur == 'X'){
-        //boucle qui passe sur toutes les cases du plateau
-        map<string, Case*>::iterator itr; //itérateur pour parcourir la map
-        for (int i=1; i<9; i++)
-        {
-            for(int j=1; j<9; j++)
-            {
-                string nom = "";
-                nom += (char)(j + 96);
-                nom += (char)(i + 48);
-                itr = cases.find(nom); //recherche la case dans la map
-                if(itr->second->getCouleur() == couleur){
-                    score++;
-                    if(i == 1 || i == 8){
-                    score += 0.5;
-                    }
-                    if(j == 1 || j == 8){
-                    score += 0.5;
-                    }
+    //boucle qui passe sur toutes les cases du plateau
+    map<string, Case*>::iterator itr; //itérateur pour parcourir la map
+    for (int i=1; i<9; i++){
+        for(int j=1; j<9; j++){
+            string nom = "";
+            nom += (char)(j + 96);
+            nom += (char)(i + 48);
+            itr = cases.find(nom); //recherche la case dans la map
+            if(itr->second->getCouleur() == 'X'){
+                score++;
+                if(i == 1 || i == 8){
+                score += 10;
                 }
-                if(itr->second->getCouleur() != couleur){
-                    score--;
-                    if(i == 1 || i == 8){
-                    score -= 0.5;
-                    }
-                    if(j == 1 || j == 8){
-                    score -= 0.5;
-                    }
+                if(j == 1 || j == 8){
+                score += 10;
+                }
+            }
+            if(itr->second->getCouleur() == 'O'){
+                score--;
+                if(i == 1 || i == 8){
+                score -= 10;
+                }
+                if(j == 1 || j == 8){
+                score -= 10;
                 }
             }
         }
     }
+    cout << "score calculé : " << score << endl;
     return score;
 }
 
@@ -568,3 +575,41 @@ int Plateau::getevaluation_score(){
     return evaluation_score;
 }
 
+void Plateau::changeCouleurJoueur(){
+    if (couleur_joueur == 'X')
+    {
+        couleur_joueur = 'O';
+    }
+    else
+    {
+        couleur_joueur = 'X';
+    }
+}
+
+void Plateau::tour_ia(int profondeur){
+    regarde_le_futur(getCouleurJoueur(), profondeur);
+    //trouve la branche avec le meilleur score et remplace le plateau par cette branche
+    int meilleur_score = 0;
+    Plateau* meilleur_branche = NULL;
+    //ecrit la taille de la liste de branches
+    cout << "score du plateau " << getevaluation_score() << endl;
+    cout << "nombre de branches du joueur " << getCouleurJoueur() << " : " << getBranches().size() << endl;
+    for (Plateau* branche : getBranches()){
+        cout << "score de la branche : " << branche->getevaluation_score() << endl;
+        if(meilleur_branche == NULL){
+            meilleur_score = branche->getevaluation_score();
+            meilleur_branche = branche;
+        }
+        else if(branche->getevaluation_score() > meilleur_score){
+            meilleur_score = branche->getevaluation_score();
+            meilleur_branche = branche;
+            cout << "nouveau meilleur score : " << meilleur_score << endl;
+        }
+    }
+    *this = *meilleur_branche;
+    //supprime les branches
+    for (Plateau* branche : getBranches()){
+        //delete branche;
+    }
+    branches.clear();
+}

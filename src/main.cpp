@@ -19,30 +19,36 @@ int main()
     }
     char type_du_joueur_qui_joue = joueur1;
     Plateau p;
-    p.afficherPlateau();
     while (true)
     {
-        if(p.fin_de_partie()){
-            p.affiche_score();
-            break;
+        p.afficherPlateau();
+        if(p.passe_le_tour()){
+            p.changeCouleurJoueur();
+            if(type_du_joueur_qui_joue == joueur1){
+                type_du_joueur_qui_joue = joueur2;
+            }
+            else{
+                type_du_joueur_qui_joue = joueur1;
+            }
+            if(p.passe_le_tour()){
+                p.affiche_score();
+                break;
+            }
         }
-        
         if(type_du_joueur_qui_joue == 'H'){
             p.ecoute_entree();
         }
         else if(type_du_joueur_qui_joue == 'A'){
-            p.regarde_le_futur(p, p.getCouleurJoueur(),2);
-            //boucle qui parcourt les branches du plateau et qui affiche le score de chaque branche
-            for (list<Plateau*>::iterator it = p.getBranches().begin(); it != p.getBranches().end(); it++)
-            {
-                cout << "score de la branche : " << (*it)->getevaluation_score() << endl;
-            }
+            cout << "L'ordinateur joue" << endl;
+            p.tour_ia(2);
+
+
+
         }
         else if(type_du_joueur_qui_joue == 'F'){
             p.ecoute_entree();
         }
-        cout << "vrai plateau" << endl;
-        p.afficherPlateau();
+        p.changeCouleurJoueur();
         if(type_du_joueur_qui_joue == joueur1){
             type_du_joueur_qui_joue = joueur2;
         }
