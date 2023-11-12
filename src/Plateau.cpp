@@ -112,7 +112,22 @@ Plateau::Plateau(Plateau& plateau){
 
 Plateau::~Plateau()
 {
-    //dtor
+    //supprime les cases
+    for(auto& case_a_supprimer : cases) {
+        delete case_a_supprimer.second;
+    }
+    cases.clear();
+    //si elles existent, supprime les branches avec le suprrimeur de plateau ~Plateau()
+    if(branches.size() > 0){
+        cout << "nombre de branches à supprimer : " << branches.size() << endl;
+        for(Plateau* branche : branches){
+            delete branche;
+        }
+    }
+    branches.clear();
+    //vide la root
+    root = NULL;
+
 }
 
 void Plateau::setCouleurJoueur(char couleur){
@@ -415,10 +430,10 @@ void Plateau::affiche_score(){
     cout << "Score du joueur noir : " << score_joueur('O') << endl;
     cout << "Score du joueur blanc : " << score_joueur('X') << endl;
     if(score_joueur('O') > score_joueur('X')){
-        cout << "Le joueur noir a gagné" << endl;
+        cout << "Le joueur O a gagné" << endl;
     }
     else if(score_joueur('O') < score_joueur('X')){
-        cout << "Le joueur blanc a gagné" << endl;
+        cout << "Le joueur X a gagné" << endl;
     }
     else{
         cout << "Egalité" << endl;
@@ -466,29 +481,55 @@ void Plateau::regarde_le_futur(char couleur, int profondeur){
                 }
                 else{
                     p_virtuel->setevaluation_score(p_virtuel->evaluation());
-                    //break;
+                    //elagation alpha beta
+                    if(root != NULL && root->getevaluation_score() != 0){
+                        if(couleur_joueur_virtuel == 'X'){
+                            if(p_virtuel->getevaluation_score() >= root->getevaluation_score()){
+                                cout << "élagage alpha beta" << endl;
+                                setevaluation_score(p_virtuel->getevaluation_score());
+                                return;
+                            }
+                        }
+                        else{
+                            if(p_virtuel->getevaluation_score() <= root->getevaluation_score()){
+                                cout << "élagage alpha beta 2" << endl;
+                                setevaluation_score(p_virtuel->getevaluation_score());
+                                return;
+                            }
+                        }
+
+                    }
+                    
                 }
             }
         }
     }
     if(couleur_joueur_virtuel == 'X'){
+        setevaluation_score(-10000);
         for(Plateau* branche : getBranches()){
             if(branche->getevaluation_score() > getevaluation_score()){
                 setevaluation_score(branche->getevaluation_score());
-                //cout << "nouveau score : " << getevaluation_score() << endl;
             }
+        }
+        //donne le score à la racine pour élagage alpha beta
+        if(root != NULL){
+            root->setevaluation_score(getevaluation_score());
         }
     }
     else{
+        setevaluation_score(10000);
         for(Plateau* branche : branches){
             if(branche->getevaluation_score() < getevaluation_score()){
                 setevaluation_score(branche->getevaluation_score());
-                cout << "nouveau score 2 : " << getevaluation_score() << endl;
             }
         }
+        //donne le score à la racine pour élagage alpha beta
+        if(root != NULL){
+            root->setevaluation_score(getevaluation_score());
+        }
     }
-    /*
     //si les branches ont des branches, on les supprime
+    /*
     for(Plateau* branche : branches){
         if(branche->getBranches().size() > 0){
             for(Plateau* branche2 : branche->getBranches()){
@@ -498,8 +539,6 @@ void Plateau::regarde_le_futur(char couleur, int profondeur){
         }
     }
     */
-//ecrit le score du plateau
-cout << "score du plateau : " << getevaluation_score() << endl;
 }
 
 list<Plateau*> Plateau::getBranches(){
@@ -545,25 +584,24 @@ int Plateau::evaluation(){
             itr = cases.find(nom); //recherche la case dans la map
             if(itr->second->getCouleur() == 'X'){
                 score++;
-                if(i == 1 || i == 8){
+                if(i == 1 || i == 8 || j == 1 || j == 8){
                 score += 10;
                 }
-                if(j == 1 || j == 8){
-                score += 10;
+                if((j == 1 && j == 8) || (i == 1 && i == 8) || (j == 1 && i == 1) || (j == 8 && i == 8)){
+                score += 100;
                 }
             }
             if(itr->second->getCouleur() == 'O'){
                 score--;
-                if(i == 1 || i == 8){
+                if(i == 1 || i == 8 || j == 1 || j == 8){
                 score -= 10;
                 }
-                if(j == 1 || j == 8){
-                score -= 10;
+                if((j == 1 && j == 8) || (i == 1 && i == 8) || (j == 1 && i == 1) || (j == 8 && i == 8)){
+                score -= 100;
                 }
             }
         }
     }
-    cout << "score calculé : " << score << endl;
     return score;
 }
 
@@ -592,7 +630,7 @@ void Plateau::tour_ia(int profondeur){
     int meilleur_score = 0;
     Plateau* meilleur_branche = NULL;
     //ecrit la taille de la liste de branches
-    cout << "score du plateau " << getevaluation_score() << endl;
+    //cout << "score du plateau " << getevaluation_score() << endl;
     cout << "nombre de branches du joueur " << getCouleurJoueur() << " : " << getBranches().size() << endl;
     for (Plateau* branche : getBranches()){
         cout << "score de la branche : " << branche->getevaluation_score() << endl;
@@ -600,16 +638,36 @@ void Plateau::tour_ia(int profondeur){
             meilleur_score = branche->getevaluation_score();
             meilleur_branche = branche;
         }
-        else if(branche->getevaluation_score() > meilleur_score){
+        else if(getCouleurJoueur() == 'X' && branche->getevaluation_score() > meilleur_score){
             meilleur_score = branche->getevaluation_score();
             meilleur_branche = branche;
-            cout << "nouveau meilleur score : " << meilleur_score << endl;
+            //cout << "nouveau meilleur score : " << meilleur_score << endl;
+        }
+        else if(getCouleurJoueur() == 'O' && branche->getevaluation_score() < meilleur_score){
+            meilleur_score = branche->getevaluation_score();
+            meilleur_branche = branche;
+            //cout << "nouveau meilleur score : " << meilleur_score << endl;
         }
     }
-    *this = *meilleur_branche;
+    cout << "meilleur score : " << meilleur_score << endl;
     //supprime les branches
-    for (Plateau* branche : getBranches()){
-        //delete branche;
+    if(getBranches().size() > 0){
+        for(Plateau* branche : getBranches()){
+            if (branche != meilleur_branche){
+                cout << "suppression d'une branche" << endl;
+                delete branche;
+                cout << "branche supprimée" << endl;
+            }
+        }
     }
     branches.clear();
+    //remplace le plateau par la branche
+    *this = *meilleur_branche;
+    //supprime les branches du nouveau plateau
+    if(getBranches().size() > 0){
+        for(Plateau* branche : getBranches()){
+            delete branche;
+        }
+    }
+    
 }

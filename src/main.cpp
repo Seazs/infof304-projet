@@ -39,7 +39,7 @@ int main()
             p.ecoute_entree();
         }
         else if(type_du_joueur_qui_joue == 'A'){
-            cout << "L'ordinateur joue" << endl;
+            cout << "L'ordinateur joue de couleur " << p.getCouleurJoueur() << endl;
             p.tour_ia(2);
 
 
