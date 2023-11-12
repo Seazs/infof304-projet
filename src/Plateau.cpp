@@ -8,6 +8,7 @@ using std::cin;
 using std::map;
 using std::list;
 
+//méthodes de création, de copie et de destruction
 
 Plateau::Plateau()
 {
@@ -112,60 +113,26 @@ Plateau::Plateau(Plateau& plateau){
 
 Plateau::~Plateau()
 {
-    //supprime les cases
     for(auto& case_a_supprimer : cases) {
         delete case_a_supprimer.second;
     }
     cases.clear();
-    //si elles existent, supprime les branches avec le suprrimeur de plateau ~Plateau()
-    if(branches.size() > 0){
-        cout << "nombre de branches à supprimer : " << branches.size() << endl;
-        for(Plateau* branche : branches){
-            delete branche;
-        }
-    }
     branches.clear();
     //vide la root
     root = NULL;
 
 }
 
+
+//méthodes d'initialisation
+
 void Plateau::setCouleurJoueur(char couleur){
     couleur_joueur = couleur;
-}
-
-char Plateau::getCouleurJoueur(){
-    return couleur_joueur;
 }
 
 void Plateau::setCases(map<string, Case*> cases){
     this->cases = cases;
 }
-
-map<string, Case*> Plateau::getCases(){
-    return cases;
-}
-
-void Plateau::afficherPlateau()
-{
-    cout << "  a b c d e f g h" << endl;
-
-    map<string, Case*>::iterator itr; //itérateur pour parcourir la map
-    for (int i=1; i<9; i++)
-    {
-        cout << i << " ";
-        for(int j=1; j<9; j++)
-        {
-            string nom = "";
-            nom += (char)(j + 96);
-            nom += (char)(i + 48);
-            itr = cases.find(nom); //recherche la case dans la map
-            cout << itr->second->getCouleur() << " "; //affiche la couleur de la case
-        }
-        cout << i << endl;
-    }
-    cout << "  a b c d e f g h" << endl;
-}   
 
 void Plateau::initialise_voisin_cases()
 {
@@ -203,21 +170,126 @@ void Plateau::setVoisins(map<string, Case*>::iterator itr, char j, char i, void 
     }
 }
 
+void Plateau::setevaluation_score(int score){
+    evaluation_score = score;
+}
 
 
-void Plateau::ecoute_entree()
+//méthodes d'accès
+
+char Plateau::getCouleurJoueur(){
+    return couleur_joueur;
+}
+
+map<string, Case*> Plateau::getCases(){
+    return cases;
+}
+
+list<Plateau*> Plateau::getBranches(){
+    return branches;
+}
+
+int Plateau::getevaluation_score(){
+    return evaluation_score;
+}
+
+
+//méthodes de modification
+
+void Plateau::changeCouleurJoueur(){
+    if (couleur_joueur == 'X')
+    {
+        couleur_joueur = 'O';
+    }
+    else
+    {
+        couleur_joueur = 'X';
+    }
+}
+
+void Plateau::ajoute_branche(Plateau* branche){
+    branches.push_back(branche);
+}
+
+
+//méthodes d'affichage
+
+void Plateau::afficherPlateau()
 {
-    string nom_case;
+    cout << "  a b c d e f g h" << endl;
+
+    map<string, Case*>::iterator itr; //itérateur pour parcourir la map
+    for (int i=1; i<9; i++)
+    {
+        cout << i << " ";
+        for(int j=1; j<9; j++)
+        {
+            string nom = "";
+            nom += (char)(j + 96);
+            nom += (char)(i + 48);
+            itr = cases.find(nom); //recherche la case dans la map
+            cout << itr->second->getCouleur() << " "; //affiche la couleur de la case
+        }
+        cout << i << endl;
+    }
+    cout << "  a b c d e f g h" << endl;
+}   
+
+
+//méthodes de jeu
+
+void Plateau::ecoute_entree() //demande le nom de la case à modifier à l'humain et appelle "ajouterPiece"
+{
+    string nom_case; //initialise le nom de la case à modifier entrée par l'humain
     cout << "Entrez le nom de la case à modifier du joueur " << couleur_joueur << " : " ;
-    cin >> nom_case;
-    while(ajouterPiece(nom_case, couleur_joueur) == false)
+    cin >> nom_case; //demande le nom de la case à modifier
+    while(ajouterPiece(nom_case, couleur_joueur) == false) //tant que la case n'existe pas ou qu'elle est déjà occupée, on redemande le nom de la case
     {
         cout << "Entrez le nom de la case à modifier du joueur " << couleur_joueur << " : " ;
         cin >> nom_case;
     }
 }
 
-bool Plateau::ajouterPiece(string nom, char couleur)
+void Plateau::tour_ia(int profondeur)//Appelle la fonction qui regarde le futur pour créer l'arbres des possibilités, puis remplace le plateau par la branche avec le meilleur score
+{
+    regarde_le_futur(getCouleurJoueur(), profondeur); //crée l'arbre des possibilités
+    Plateau* meilleur_branche = NULL; //initialise la branche avec le meilleur score et le meilleur score
+    int meilleur_score = 0;
+    //cout << "nombre de branches du joueur " << getCouleurJoueur() << " : " << getBranches().size() << endl;
+    for (Plateau* branche : getBranches()){ //On parcourt les branches directes du plateau
+        //cout << "score de la branche : " << branche->getevaluation_score() << endl;
+        if(meilleur_branche == NULL){ //si c'est la première branche, on l'initialise comme la meilleure
+            meilleur_score = branche->getevaluation_score();
+            meilleur_branche = branche;
+        }
+        else if(getCouleurJoueur() == 'X' && branche->getevaluation_score() > meilleur_score){//le joueur X cherche le meilleur score positif
+            meilleur_score = branche->getevaluation_score();
+            meilleur_branche = branche;
+            //cout << "nouveau meilleur score : " << meilleur_score << endl;
+        }
+        else if(getCouleurJoueur() == 'O' && branche->getevaluation_score() < meilleur_score){//le joueur O cherche le meilleur score négatif
+            meilleur_score = branche->getevaluation_score();
+            meilleur_branche = branche;
+            //cout << "nouveau meilleur score : " << meilleur_score << endl;
+        }
+    }
+    //cout << "meilleur score : " << meilleur_score << endl;
+    if(getBranches().size() > 0){//si le plateau a des branches, on les supprime toutes sauf la meilleure
+        for (Plateau* branche : getBranches()){
+            if (branche != meilleur_branche){
+                branche->supresseur_d_arbre();
+                delete branche;
+            }
+        }
+    }
+    *this = *meilleur_branche; //remplace le plateau par la branche avec le meilleur score
+    supresseur_d_arbre(); //supprime les branches du nouveau plateau
+}
+
+
+//fonctions de jeu
+
+bool Plateau::ajouterPiece(string nom, char couleur)//trouve la case dans la map et appelle "capturePieces" si la case est vide. La couleur de la case est changée si "capturePieces" renvoie true et la fonction renvoie true. Sinon, la fonction renvoie false
 {
     map<string, Case*>::iterator itr; //itérateur pour parcourir la map
     itr = cases.find(nom); //recherche la case dans la map
@@ -225,7 +297,7 @@ bool Plateau::ajouterPiece(string nom, char couleur)
     {
         if (itr->second->getCouleur() == '.') //si la case est vide
         {
-            if(capturePieces(itr->second) == true){
+            if(capturePieces(itr->second) == true){//si au moins une pièce a été capturée
                 itr->second->setCouleur(couleur); //on ajoute la pièce
                 cout << "Pièce " << couleur_joueur << " posée en " << nom << endl;
                 return true;
@@ -248,8 +320,36 @@ bool Plateau::ajouterPiece(string nom, char couleur)
     }
 }
 
-bool Plateau::capturePieces(Case* c){
-    int i = 0;
+bool Plateau::ajouterPiece_silencieux(string nom, char couleur)//meme chose que "ajouterPiece" mais sans afficher de message pour pouvoir créer des branches silencieusement
+{
+    map<string, Case*>::iterator itr; //itérateur pour parcourir la map
+    itr = cases.find(nom); //recherche la case dans la map
+    if (itr != cases.end()) //si la case existe
+    {
+        if (itr->second->getCouleur() == '.') //si la case est vide
+        {
+            if(capturePieces(itr->second) == true){
+                itr->second->setCouleur(couleur); //on ajoute la pièce
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool Plateau::capturePieces(Case* c)//vérifie si la pièce peut être capturée dans toutes les directions avec "verifie_la_prise" et appelle "capturePiece" si c'est le cas. La fonction renvoie true si au moins une pièce a été capturée et false sinon
+{
+    int i = 0;//compteur de pièces capturées
     if(verifie_la_prise(c, &Case::getUp)){
         capturePiece(c, &Case::getUp);
         i++;
@@ -288,10 +388,12 @@ bool Plateau::capturePieces(Case* c){
     return true;
 }
 
-bool Plateau::verifie_la_prise(Case* c, Case* (Case::*getNeighbor)()){
-    while ((c->*getNeighbor)() != NULL && ((c->*getNeighbor)())->getCouleur() != '.' && ((c->*getNeighbor)())->getCouleur() != getCouleurJoueur() && ((c->*getNeighbor)()->*getNeighbor)() != NULL) {
-        c = (c->*getNeighbor)();
-        if ((c->*getNeighbor)()->getCouleur() == couleur_joueur) {
+bool Plateau::verifie_la_prise(Case* c, Case* (Case::*getNeighbor)())//regarde dans la direction donnée si une pièce peut être capturée et renvoie true si c'est le cas
+{
+    while ((c->*getNeighbor)() != NULL && ((c->*getNeighbor)())->getCouleur() != '.' && ((c->*getNeighbor)())->getCouleur() != getCouleurJoueur() && ((c->*getNeighbor)()->*getNeighbor)() != NULL) 
+    {//tant que la case suivante existe, qu'elle n'est pas vide, qu'elle n'est pas de la couleur du joueur qui joue et d'apres existe aussi
+        c = (c->*getNeighbor)(); //on continue dans la direction à regarder plus loin
+        if ((c->*getNeighbor)()->getCouleur() == couleur_joueur) {//si la case suivante est de la couleur du joueur qui joue->Il y a un encadrement de pièces->il y a prise
             //cout << "La pièce " << couleur_joueur << " peut être capturée en " << c->getNom() << endl;
             return true;
         }
@@ -299,32 +401,21 @@ bool Plateau::verifie_la_prise(Case* c, Case* (Case::*getNeighbor)()){
     return false;
 }
 
-void Plateau::capturePiece(Case* c, Case* (Case::*getNeighbor)()){
-    while ((c->*getNeighbor)()->getCouleur() != couleur_joueur)
+void Plateau::capturePiece(Case* c, Case* (Case::*getNeighbor)())//capture les pièces dans la direction donnée jusqu'à rencontré une pièce de la couleur du joueur qui joue
+{
+    while ((c->*getNeighbor)()->getCouleur() != couleur_joueur)//tant que la case suivante n'est pas de la couleur du joueur qui joue
     {
-        (c->*getNeighbor)()->setCouleur(couleur_joueur);
-        c = (c->*getNeighbor)();
+        (c->*getNeighbor)()->setCouleur(couleur_joueur);//change la couleur de la pièce
+        c = (c->*getNeighbor)();//on continue dans la direction à regarder plus loin
     }
 }
 
 
 
+//fonctions d'arret de jeu
 
-bool Plateau::fin_de_partie(){
-    if(passe_le_tour()==true){
-        if(passe_le_tour()==true){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    else{
-        return false;
-    }
-}
-
-bool Plateau::passe_le_tour(){
+bool Plateau::passe_le_tour()//appelle "verifie_si_le_joueur_peut_jouer" et renvoie true si le joueur ne peut pas jouer.
+{
     if(verifie_si_le_joueur_peut_jouer(getCouleurJoueur())){
         return false;
     }
@@ -334,7 +425,8 @@ bool Plateau::passe_le_tour(){
     }
 }
 
-bool Plateau::verifie_si_le_joueur_peut_jouer(char couleur){
+bool Plateau::verifie_si_le_joueur_peut_jouer(char couleur)//appelle "ajouterPieceVirtuelle" pour toutes les cases du plateau et renvoie true si au moins une pièce peut être ajoutée. La fonction renvoie false si aucune pièce ne peut être ajoutée
+{
     map<string, Case*>::iterator itr; //itérateur pour parcourir la map
     for (int i=1; i<9; i++)
     {
@@ -344,15 +436,15 @@ bool Plateau::verifie_si_le_joueur_peut_jouer(char couleur){
             nom += (char)(j + 96);
             nom += (char)(i + 48);
             itr = cases.find(nom); //recherche la case dans la map
-            if(ajouterPieceVirtuelle(nom, couleur)){
-                return true;   
+            if(ajouterPieceVirtuelle(nom, couleur)){//si au moins une pièce peut être ajoutée
+                return true;   //s'arrete des qu'une pièce peut être ajoutée
             }
         }
     }
     return false;
 }
 
-bool Plateau::ajouterPieceVirtuelle(string nom, char couleur)
+bool Plateau::ajouterPieceVirtuelle(string nom, char couleur)//meme chose que "ajouterPiece" mais sans afficher de message et appelle "capturePiecesVirtuelle" au lieu de "capturePieces". La fonction renvoie true si au moins une pièce peut être capturée
 {
     map<string, Case*>::iterator itr; //itérateur pour parcourir la map
     itr = cases.find(nom); //recherche la case dans la map
@@ -360,7 +452,6 @@ bool Plateau::ajouterPieceVirtuelle(string nom, char couleur)
     if (itr->second->getCouleur() == '.') //si la case est vide
     {
         if(capturePiecesVirtuelle(itr->second) == true){
-            /*itr->second->setCouleur(couleur); //on ajoute la pièce*/
             return true;
         }
         else{
@@ -373,7 +464,8 @@ bool Plateau::ajouterPieceVirtuelle(string nom, char couleur)
     }
 }
 
-bool Plateau::capturePiecesVirtuelle(Case* c){
+bool Plateau::capturePiecesVirtuelle(Case* c)//meme chose que "capturePieces" mais sans appeler "capturePiece" pour ne pas changer la couleur des pièces. La fonction renvoie true si au moins une pièce peut être capturée
+{
     int i = 0;
     if(verifie_la_prise(c, &Case::getUp)){
         i++;
@@ -406,8 +498,27 @@ bool Plateau::capturePiecesVirtuelle(Case* c){
 }
 
 
-int Plateau::score_joueur(char couleur){
-    int score = 0;
+void Plateau::affiche_score()//appelle "score_joueur" pour les deux joueurs et affiche le score et le gagnant
+{
+    int score_joueur_X = score_joueur('X');
+    int score_joueur_O = score_joueur('O');
+    cout << "Fin de partie" << endl;
+    cout << "Score du joueur blanc : " << score_joueur_O << endl;
+    cout << "Score du joueur noir : " << score_joueur_X << endl;
+    if(score_joueur_X > score_joueur_O){
+        cout << "Le joueur noir a gagné (X)" << endl;
+    }
+    else if(score_joueur_X < score_joueur_O){
+        cout << "Le joueur blanc a gagné (O)" << endl;
+    }
+    else{
+        cout << "Egalité" << endl;
+    }
+}
+
+int Plateau::score_joueur(char couleur)//compte le nombre de pièces de la couleur donnée et renvoie le score
+{
+    int score = 0;//initialise le score
     map<string, Case*>::iterator itr; //itérateur pour parcourir la map
     for (int i=1; i<9; i++)
     {
@@ -418,33 +529,18 @@ int Plateau::score_joueur(char couleur){
             nom += (char)(i + 48);
             itr = cases.find(nom); //recherche la case dans la map
             if(itr->second->getCouleur() == couleur){
-                score++;
+                score++;//ajoute 1 au score pour chaque pièce de la couleur du joueur
             }
         }
     }
     return score;
 }
 
-void Plateau::affiche_score(){
-    cout << "Fin de partie" << endl;
-    cout << "Score du joueur noir : " << score_joueur('O') << endl;
-    cout << "Score du joueur blanc : " << score_joueur('X') << endl;
-    if(score_joueur('O') > score_joueur('X')){
-        cout << "Le joueur O a gagné" << endl;
-    }
-    else if(score_joueur('O') < score_joueur('X')){
-        cout << "Le joueur X a gagné" << endl;
-    }
-    else{
-        cout << "Egalité" << endl;
-    }
-}
 
-void Plateau::ajoute_branche(Plateau* branche){
-    branches.push_back(branche);
-}
+//fonctions d'intelligence artificielle
 
-void Plateau::regarde_le_futur(char couleur, int profondeur){
+void Plateau::regarde_le_futur(char couleur, int profondeur)//crée l'arbre des possibilités pour les branches du plateau actuel tout en suivant un algo minimax avec élagage alpha beta
+{
     char couleur_joueur_virtuel = couleur;
     map<string, Case*>::iterator itr; //itérateur pour parcourir la map
     for(int i=1; i<9; i++){
@@ -453,12 +549,15 @@ void Plateau::regarde_le_futur(char couleur, int profondeur){
             nom += (char)(j + 96);
             nom += (char)(i + 48);
             itr = cases.find(nom); //recherche la case dans la map
-            if(ajouterPieceVirtuelle(nom, couleur) == true){
-                Plateau* p_virtuel = new Plateau(*this);
-                p_virtuel->ajouterPiece_silencieux(nom, couleur);
-                ajoute_branche(p_virtuel);
-                p_virtuel->root = this;
-                if(profondeur > 0){
+            if(ajouterPieceVirtuelle(nom, couleur) == true)//si une pièce peut être ajoutée sur cette case
+            {
+                Plateau* p_virtuel = new Plateau(*this);//crée un plateau virtuel copie du plateau actuel
+                p_virtuel->ajouterPiece_silencieux(nom, couleur);//ajoute une pièce sur la case du plateau virtuel
+                ajoute_branche(p_virtuel);//ajoute le plateau virtuel comme branche du plateau actuel
+                p_virtuel->root = this;//donne le plateau actuel comme racine du plateau virtuel
+                if(profondeur > 0)//si la profondeur n'est pas atteinte, on continue de créer l'arbre des possibilités
+                {
+                    //le prochain joueur est le joueur adverse, on change donc la couleur du joueur virtuel pour la prochaine branche
                     if (couleur_joueur_virtuel == 'X')
                     {
                         couleur_joueur_virtuel = 'O';
@@ -467,8 +566,9 @@ void Plateau::regarde_le_futur(char couleur, int profondeur){
                     {
                         couleur_joueur_virtuel = 'X';
                     }
-                    p_virtuel->setCouleurJoueur(couleur_joueur_virtuel);
-                    p_virtuel->regarde_le_futur(couleur_joueur_virtuel, profondeur-1);
+                    p_virtuel->setCouleurJoueur(couleur_joueur_virtuel);//change la couleur du joueur virtuel pour la prochaine branche
+                    p_virtuel->regarde_le_futur(couleur_joueur_virtuel, profondeur-1);//crée l'arbre des possibilités pour les branches du plateau actuel
+                    //on revient sur le plateau actuel donc on récupère la couleur du joueur actuel
                     if (couleur_joueur_virtuel == 'X')
                     {
                         couleur_joueur_virtuel = 'O';
@@ -477,38 +577,37 @@ void Plateau::regarde_le_futur(char couleur, int profondeur){
                     {
                         couleur_joueur_virtuel = 'X';
                     }
-                    p_virtuel->setCouleurJoueur(couleur_joueur_virtuel);   
+                    p_virtuel->setCouleurJoueur(couleur_joueur_virtuel);//récupère la couleur du joueur actuel
                 }
-                else{
-                    p_virtuel->setevaluation_score(p_virtuel->evaluation());
-                    //elagation alpha beta
-                    if(root != NULL && root->getevaluation_score() != 0){
-                        if(couleur_joueur_virtuel == 'X'){
-                            if(p_virtuel->getevaluation_score() >= root->getevaluation_score()){
-                                cout << "élagage alpha beta" << endl;
-                                setevaluation_score(p_virtuel->getevaluation_score());
-                                return;
-                            }
+                else{//si la profondeur est atteinte
+                    p_virtuel->setevaluation_score(p_virtuel->evaluation());//évalue le plateau virtuel
+                }
+                //elagation alpha beta
+                if(root != NULL && root->getevaluation_score() != 0){//si le père du plateau virtuel existe et a un score d'évaluation différent de 0 (il a reçu son score d'évaluation d'un autre fils)
+                    if(couleur_joueur_virtuel == 'X'){
+                        if(p_virtuel->getevaluation_score() >= root->getevaluation_score()){//si le score du plateau virtuel(fils) est supérieur au score du père/oncle
+                            //cout << "élagage alpha beta" << endl;
+                            setevaluation_score(p_virtuel->getevaluation_score());
+                            return;//on arrête de créer des branches pour le plateau actuel
                         }
-                        else{
-                            if(p_virtuel->getevaluation_score() <= root->getevaluation_score()){
-                                cout << "élagage alpha beta 2" << endl;
-                                setevaluation_score(p_virtuel->getevaluation_score());
-                                return;
-                            }
-                        }
-
                     }
-                    
+                    else{
+                        if(p_virtuel->getevaluation_score() <= root->getevaluation_score()){//si le score du plateau virtuel(fils) est inférieur au score du père/oncle
+                            //cout << "élagage alpha beta 2" << endl;
+                            setevaluation_score(p_virtuel->getevaluation_score());
+                            return;//on arrête de créer des branches pour le plateau actuel
+                        }
+                    }
                 }
             }
         }
     }
+    //le plateau actuel est évalué en fonction des scores de ses branches
     if(couleur_joueur_virtuel == 'X'){
-        setevaluation_score(-10000);
+        setevaluation_score(-100000);//initialise le score à -100000 pour le joueur X
         for(Plateau* branche : getBranches()){
             if(branche->getevaluation_score() > getevaluation_score()){
-                setevaluation_score(branche->getevaluation_score());
+                setevaluation_score(branche->getevaluation_score());//le score du plateau actuel est le score de la branche avec le meilleur score
             }
         }
         //donne le score à la racine pour élagage alpha beta
@@ -517,10 +616,10 @@ void Plateau::regarde_le_futur(char couleur, int profondeur){
         }
     }
     else{
-        setevaluation_score(10000);
+        setevaluation_score(100000);//initialise le score à 100000 pour le joueur O
         for(Plateau* branche : branches){
             if(branche->getevaluation_score() < getevaluation_score()){
-                setevaluation_score(branche->getevaluation_score());
+                setevaluation_score(branche->getevaluation_score());//le score du plateau actuel est le score de la branche avec le meilleur score
             }
         }
         //donne le score à la racine pour élagage alpha beta
@@ -528,51 +627,10 @@ void Plateau::regarde_le_futur(char couleur, int profondeur){
             root->setevaluation_score(getevaluation_score());
         }
     }
-    //si les branches ont des branches, on les supprime
-    /*
-    for(Plateau* branche : branches){
-        if(branche->getBranches().size() > 0){
-            for(Plateau* branche2 : branche->getBranches()){
-                delete branche2;
-            }
-            branche->getBranches().clear();
-        }
-    }
-    */
 }
 
-list<Plateau*> Plateau::getBranches(){
-    return branches;
-}
-
-bool Plateau::ajouterPiece_silencieux(string nom, char couleur)
+int Plateau::evaluation()//évalue le plateau en fonction du nombre de pièces de chaque joueur et de leur position sur le plateau. Renvoie le score.
 {
-    map<string, Case*>::iterator itr; //itérateur pour parcourir la map
-    itr = cases.find(nom); //recherche la case dans la map
-    if (itr != cases.end()) //si la case existe
-    {
-        if (itr->second->getCouleur() == '.') //si la case est vide
-        {
-            if(capturePieces(itr->second) == true){
-                itr->second->setCouleur(couleur); //on ajoute la pièce
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else
-    {
-        return false;
-    }
-}
-
-int Plateau::evaluation(){
     int score = 0;
     //boucle qui passe sur toutes les cases du plateau
     map<string, Case*>::iterator itr; //itérateur pour parcourir la map
@@ -605,69 +663,13 @@ int Plateau::evaluation(){
     return score;
 }
 
-void Plateau::setevaluation_score(int score){
-    evaluation_score = score;
-}
-
-int Plateau::getevaluation_score(){
-    return evaluation_score;
-}
-
-void Plateau::changeCouleurJoueur(){
-    if (couleur_joueur == 'X')
-    {
-        couleur_joueur = 'O';
-    }
-    else
-    {
-        couleur_joueur = 'X';
-    }
-}
-
-void Plateau::tour_ia(int profondeur){
-    regarde_le_futur(getCouleurJoueur(), profondeur);
-    //trouve la branche avec le meilleur score et remplace le plateau par cette branche
-    int meilleur_score = 0;
-    Plateau* meilleur_branche = NULL;
-    //ecrit la taille de la liste de branches
-    //cout << "score du plateau " << getevaluation_score() << endl;
-    cout << "nombre de branches du joueur " << getCouleurJoueur() << " : " << getBranches().size() << endl;
-    for (Plateau* branche : getBranches()){
-        cout << "score de la branche : " << branche->getevaluation_score() << endl;
-        if(meilleur_branche == NULL){
-            meilleur_score = branche->getevaluation_score();
-            meilleur_branche = branche;
-        }
-        else if(getCouleurJoueur() == 'X' && branche->getevaluation_score() > meilleur_score){
-            meilleur_score = branche->getevaluation_score();
-            meilleur_branche = branche;
-            //cout << "nouveau meilleur score : " << meilleur_score << endl;
-        }
-        else if(getCouleurJoueur() == 'O' && branche->getevaluation_score() < meilleur_score){
-            meilleur_score = branche->getevaluation_score();
-            meilleur_branche = branche;
-            //cout << "nouveau meilleur score : " << meilleur_score << endl;
+void Plateau::supresseur_d_arbre()//s'appelle récursivement pour supprimer toutes les branches du plateau
+{
+    if(getBranches().size() > 0){//si le plateau a des branches
+        for(Plateau* branche : getBranches()){//appelle chaque branche
+            branche->supresseur_d_arbre();//supprime les branches de la branche
+            delete branche;//supprime la branche
         }
     }
-    cout << "meilleur score : " << meilleur_score << endl;
-    //supprime les branches
-    if(getBranches().size() > 0){
-        for(Plateau* branche : getBranches()){
-            if (branche != meilleur_branche){
-                cout << "suppression d'une branche" << endl;
-                delete branche;
-                cout << "branche supprimée" << endl;
-            }
-        }
-    }
-    branches.clear();
-    //remplace le plateau par la branche
-    *this = *meilleur_branche;
-    //supprime les branches du nouveau plateau
-    if(getBranches().size() > 0){
-        for(Plateau* branche : getBranches()){
-            delete branche;
-        }
-    }
-    
+    branches.clear();//vide la liste des branches
 }

@@ -17,38 +17,35 @@ int main()
         cout << "Vous avez choisi un type de joueur invalide" << endl;
         return 0;
     }
-    char type_du_joueur_qui_joue = joueur1;
-    Plateau p;
-    while (true)
+    char type_du_joueur_qui_joue = joueur1; //le joueur 1 commence toujours
+    Plateau p; //initialise le plateau
+    while (true)  //boucle de jeu
     {
-        p.afficherPlateau();
-        if(p.passe_le_tour()){
-            p.changeCouleurJoueur();
+        p.afficherPlateau(); // le plateau est affiché au debut de chaque tour
+        if(p.passe_le_tour()){  //verifie si le joueur peut jouer
+            p.changeCouleurJoueur(); //le joueur doit passé son tour -> change la couleur et le type du joueur qui joue
             if(type_du_joueur_qui_joue == joueur1){
                 type_du_joueur_qui_joue = joueur2;
             }
             else{
                 type_du_joueur_qui_joue = joueur1;
             }
-            if(p.passe_le_tour()){
-                p.affiche_score();
-                break;
+            if(p.passe_le_tour()){ //verifie si le deuxieme joueur peut jouer
+                p.affiche_score(); //finalise la partir
+                break; // sort de la boucle de jeu
             }
         }
-        if(type_du_joueur_qui_joue == 'H'){
-            p.ecoute_entree();
+        if(type_du_joueur_qui_joue == 'H'){ //si le type de joueur qui joue est humain
+            p.ecoute_entree();//l'humain joue
         }
-        else if(type_du_joueur_qui_joue == 'A'){
-            cout << "L'ordinateur joue de couleur " << p.getCouleurJoueur() << endl;
-            p.tour_ia(2);
-
-
-
+        else if(type_du_joueur_qui_joue == 'A'){ //si le type de joueur qui joue est une intelligence artificielle
+            cout << "L'ordinateur de couleur " << p.getCouleurJoueur() << " joue" << endl;
+            p.tour_ia(3); //l'ia joue
         }
-        else if(type_du_joueur_qui_joue == 'F'){
-            p.ecoute_entree();
+        else if(type_du_joueur_qui_joue == 'F'){ //si le type de joueur qui joue est un fichier
+            p.ecoute_entree(); //le fichier joue
         }
-        p.changeCouleurJoueur();
+        p.changeCouleurJoueur(); //fin de tour -> change la couleur et le type du joueur qui joue
         if(type_du_joueur_qui_joue == joueur1){
             type_du_joueur_qui_joue = joueur2;
         }
@@ -56,5 +53,5 @@ int main()
             type_du_joueur_qui_joue = joueur1;
         }
     }
-    return 0;
+    return 0; //fin du programme si on sort de la boucle de jeu
 }
