@@ -37,6 +37,7 @@ int main()
         }
         if(type_du_joueur_qui_joue == 'H'){ //si le type de joueur qui joue est humain
             p.ecoute_entree();//l'humain joue
+            p.changeCouleurJoueur(); //fin de tour -> change la couleur et le type du joueur qui joue
         }
         else if(type_du_joueur_qui_joue == 'A'){ //si le type de joueur qui joue est une intelligence artificielle
             cout << "L'ordinateur de couleur " << p.getCouleurJoueur() << " joue" << endl;
@@ -45,7 +46,6 @@ int main()
         else if(type_du_joueur_qui_joue == 'F'){ //si le type de joueur qui joue est un fichier
             p.ecoute_entree(); //le fichier joue
         }
-        p.changeCouleurJoueur(); //fin de tour -> change la couleur et le type du joueur qui joue
         if(type_du_joueur_qui_joue == joueur1){
             type_du_joueur_qui_joue = joueur2;
         }

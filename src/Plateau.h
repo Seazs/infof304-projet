@@ -11,7 +11,7 @@ class Plateau
 {
     private:
         map<string, Case*> cases; //map de toutes les cases du plateau
-        char couleur_joueur; //couleur du joueur qui joue
+        char couleur_joueur; //couleur du joueur qui doit jouer
         Plateau* root = NULL; //pointeur vers la racine/père du plateau
         list<Plateau*> branches = {}; //liste des pointeurs des branches/fils du plateau
         int evaluation_score; //score d'évaluation du plateau (ou celui recu de ses fils)
@@ -61,6 +61,12 @@ class Plateau
         //fonctions d'intelligence artificielle
         void regarde_le_futur(char couleur, int profondeur);
         int evaluation();
-        void supresseur_d_arbre();    
+        void supresseur_d_arbre();
+
+        void creer_arbre(int profondeur); 
+        void nouvelles_branches();  
+        void evaluation_initiale();
+        void minimax();
+        bool elagage_alpha_beta();
 
 };
