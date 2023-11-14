@@ -252,6 +252,7 @@ void Plateau::ecoute_entree() //demande le nom de la case à modifier à l'humai
 
 void Plateau::tour_ia(int profondeur)//Appelle la fonction qui regarde le futur pour créer l'arbres des possibilités, puis remplace le plateau par la branche avec le meilleur score
 {
+    /*
     //si le plateau à des branches, on trouve celle dont les cases sont identiques au plateau actuel en comparent chaaque case et le plateau devient cette branche
     if(getBranches().size() > 0){
         for (Plateau* branche : getBranches()){
@@ -280,6 +281,10 @@ void Plateau::tour_ia(int profondeur)//Appelle la fonction qui regarde le futur 
                     }
                 }
                 *this = *branche;
+                for(Plateau* branche : getBranches()){
+                    branche->supresseur_d_arbre();
+                    branches.clear();
+                }
                 break;
             }
             else{//si aucune branche n'est identique au plateau actuel, on supprime toutes les branches
@@ -290,6 +295,7 @@ void Plateau::tour_ia(int profondeur)//Appelle la fonction qui regarde le futur 
             }
         }
     }
+    */
     //regarde_le_futur(getCouleurJoueur(), profondeur); //crée l'arbre des possibilités
     creer_arbre(profondeur);//crée l'arbre des possibilités
     Plateau* meilleur_branche = NULL; //initialise la branche avec le meilleur score et le meilleur score
@@ -322,6 +328,11 @@ void Plateau::tour_ia(int profondeur)//Appelle la fonction qui regarde le futur 
         }
     }
     *this = *meilleur_branche; //remplace le plateau par la branche avec le meilleur score
+    //supprime toutes les branches du plateau
+    for (Plateau* branche : getBranches()){
+        branche->supresseur_d_arbre();
+        branches.clear();
+    }
 }
 
 
@@ -687,20 +698,20 @@ int Plateau::evaluation()//évalue le plateau en fonction du nombre de pièces d
             nom += (char)(i + 48);
             itr = cases.find(nom); //recherche la case dans la map
             if(itr->second->getCouleur() == 'X'){
-                score++;
-                if(i == 1 || i == 8 || j == 1 || j == 8){
+                score++;//ajoute 1 au score pour chaque pièce de la couleur du joueur
+                if(i == 1 || i == 8 || j == 1 || j == 8){//ajoute 10 au score pour chaque pièce sur un bord
                 score += 10;
                 }
-                if((j == 1 && j == 8) || (i == 1 && i == 8) || (j == 1 && i == 1) || (j == 8 && i == 8)){
+                if((j == 1 && j == 8) || (i == 1 && i == 8) || (j == 1 && i == 1) || (j == 8 && i == 8)){//ajoute 100 au score pour chaque pièce dans un coin
                 score += 100;
                 }
             }
             if(itr->second->getCouleur() == 'O'){
-                score--;
-                if(i == 1 || i == 8 || j == 1 || j == 8){
+                score--;//ajoute 1 au score pour chaque pièce de la couleur du joueur
+                if(i == 1 || i == 8 || j == 1 || j == 8){//ajoute 10 au score pour chaque pièce sur un bord
                 score -= 10;
                 }
-                if((j == 1 && j == 8) || (i == 1 && i == 8) || (j == 1 && i == 1) || (j == 8 && i == 8)){
+                if((j == 1 && j == 8) || (i == 1 && i == 8) || (j == 1 && i == 1) || (j == 8 && i == 8)){//ajoute 100 au score pour chaque pièce dans un coin
                 score -= 100;
                 }
             }
@@ -719,6 +730,7 @@ void Plateau::supresseur_d_arbre()//s'appelle récursivement pour supprimer tout
     }
     branches.clear();//vide la liste des branches
 }
+
 
 void Plateau::creer_arbre(int profondeur)//nouvelle version de "regarde_le_futur"
 {
@@ -796,20 +808,20 @@ bool Plateau::elagage_alpha_beta()
         //cout << root->getBranches().size() << endl;
         for(Plateau* frere : root->getBranches()){//pour chaque frere du plateau actuel
             if(frere != this){//si le frere est différent du plateau actuel
-                if(couleur_joueur == 'X'){
-                    if(frere->getevaluation_score() < getevaluation_score()){//si le score du frere est supérieur au score du fils
-                        //cout << "élagage alpha" << endl;
-                        //cout << "score du frere : " << frere->getevaluation_score() << endl;
-                        //cout << "score du fils : " << p_virtuel->getevaluation_score() << endl;
-                        setevaluation_score(frere->getevaluation_score());//le score du plateau actuel est le score du frere avec le meilleur score
-                        return true;//on arrête de créer des branches pour le plateau actuel
+                if(getCouleurJoueur() == 'X'){
+                    for(Plateau* fils : getBranches()){
+                        if(fils->getevaluation_score() > frere->getevaluation_score()){
+                            setevaluation_score(fils->getevaluation_score());//le score du plateau actuel est le score de la branche avec le meilleur score
+                            return true;//on arrête de créer des branches pour le plateau actuel
+                        }
                     }
                 }
                 else{
-                    if(frere->getevaluation_score() > getevaluation_score()){//si le score du frere est inférieur au score du fils
-                        //cout << "élagage beta" << endl;
-                        setevaluation_score(frere->getevaluation_score());//le score du plateau actuel est le score du frere avec le meilleur score
-                        return true;//on arrête de créer des branches pour le plateau actuel
+                    for(Plateau* fils : getBranches()){
+                        if(fils->getevaluation_score() < frere->getevaluation_score()){
+                            setevaluation_score(fils->getevaluation_score());//le score du plateau actuel est le score de la branche avec le meilleur score
+                            return true;//on arrête de créer des branches pour le plateau actuel
+                        }
                     }
                 }
             }

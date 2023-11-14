@@ -4,9 +4,9 @@
 #include "Case.h"
 #include <list>
 using std::list;
-
 using std::map;
 using std::string;
+
 class Plateau 
 {
     private:
@@ -18,9 +18,9 @@ class Plateau
 
     public:
         //méthodes de création, de copie et de destruction
-        Plateau();
-        Plateau(Plateau& plateau);
-        ~Plateau();
+        Plateau();//constructeur par défaut
+        Plateau(Plateau& plateau);//constructeur de copie
+        ~Plateau();//destructeur
         //méthodes d'initialisation
         void setCouleurJoueur(char couleur);
         void setCases(map<string, Case*> cases);
