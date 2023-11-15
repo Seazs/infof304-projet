@@ -27,68 +27,6 @@ Plateau::Plateau()
     cases["e5"]->setCouleur('O');
 
 
-    cases["a1"]->setCouleur('O');
-    cases["a2"]->setCouleur('X');
-    cases["a3"]->setCouleur('X');
-    cases["a4"]->setCouleur('X');
-    cases["a5"]->setCouleur('X');
-    cases["a6"]->setCouleur('X');
-    cases["a7"]->setCouleur('X');
-    cases["a8"]->setCouleur('X');
-    cases["b1"]->setCouleur('X');
-    cases["b2"]->setCouleur('X');
-    cases["b3"]->setCouleur('X');
-    cases["b4"]->setCouleur('X');
-    cases["b5"]->setCouleur('X');
-    cases["b6"]->setCouleur('X');
-    cases["b7"]->setCouleur('X');
-    cases["b8"]->setCouleur('X');
-    cases["c1"]->setCouleur('X');
-    cases["c2"]->setCouleur('X');
-    cases["c3"]->setCouleur('X');
-    cases["c4"]->setCouleur('X');
-    cases["c5"]->setCouleur('X');
-    cases["c6"]->setCouleur('X');
-    cases["c7"]->setCouleur('X');
-    cases["c8"]->setCouleur('X');
-    cases["d1"]->setCouleur('X');
-    cases["d2"]->setCouleur('X');
-    cases["d3"]->setCouleur('X');
-    cases["d4"]->setCouleur('X');
-    cases["d5"]->setCouleur('X');
-    cases["d6"]->setCouleur('X');
-    cases["d7"]->setCouleur('X');
-    cases["d8"]->setCouleur('X');
-    cases["e1"]->setCouleur('X');
-    cases["e2"]->setCouleur('X');
-    cases["e3"]->setCouleur('X');
-    cases["e4"]->setCouleur('X');
-    cases["e5"]->setCouleur('X');
-    cases["e6"]->setCouleur('X');
-    cases["e7"]->setCouleur('X');
-    cases["e8"]->setCouleur('X');
-    cases["f1"]->setCouleur('X');
-    cases["f2"]->setCouleur('X');
-    cases["f3"]->setCouleur('X');
-    cases["f4"]->setCouleur('X');
-    cases["f5"]->setCouleur('X');
-    cases["f6"]->setCouleur('X');
-    cases["f7"]->setCouleur('X');
-    cases["f8"]->setCouleur('X');
-    cases["g1"]->setCouleur('X');
-    cases["g2"]->setCouleur('X');
-    cases["g3"]->setCouleur('X');
-    cases["g4"]->setCouleur('X');
-    cases["g5"]->setCouleur('X');
-    cases["g6"]->setCouleur('X');
-    cases["g7"]->setCouleur('X');
-    cases["g8"]->setCouleur('X');
-    cases["h1"]->setCouleur('X');
-    cases["h2"]->setCouleur('X');
-    cases["h3"]->setCouleur('X');
-    cases["h4"]->setCouleur('X');
-
-
     //couleur du joueur qui commence
     setCouleurJoueur('X');
     initialise_voisin_cases();
@@ -406,8 +344,6 @@ int Plateau::score_joueur(char couleur){
 
 void Plateau::affiche_score(){
     cout << "Fin de partie" << endl;
-    cout << "Score du joueur noir : " << score_joueur('O') << endl;
-    cout << "Score du joueur blanc : " << score_joueur('X') << endl;
     if(score_joueur('O') > score_joueur('X')){
         cout << "Le joueur noir a gagné" << endl;
     }
@@ -417,4 +353,7 @@ void Plateau::affiche_score(){
     else{
         cout << "Egalité" << endl;
     }
+    cout << "Noir: " << score_joueur('O') << endl;
+    cout << "Blanc: " << score_joueur('X') << endl;
+    
 }
