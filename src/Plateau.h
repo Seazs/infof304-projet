@@ -13,8 +13,12 @@ class Plateau
         map<string, Case*> cases; //map de toutes les cases du plateau
         char couleur_joueur; //couleur du joueur qui doit jouer
         Plateau* root = NULL; //pointeur vers la racine/père du plateau
-        list<Plateau*> branches = {}; //liste des pointeurs des branches/fils du plateau
+        list<Plateau*> branches ; //liste des pointeurs des branches/fils du plateau
         int evaluation_score; //score d'évaluation du plateau (ou celui recu de ses fils)
+        string NomJoueur1; 
+        string NomJoueur2;
+        char lettre_joueur1; 
+        char lettre_joueur2;
 
     public:
         //méthodes de création, de copie et de destruction
@@ -28,6 +32,8 @@ class Plateau
         void setVoisins(map<string, Case*>::iterator itr, char j, char i, void (Case::*setNeighbor)(Case*));
         void setevaluation_score(int score);
         //méthodes d'accès
+        void demande_nom_joueur1(char nom_joueur);
+        void demande_nom_joueur2(char nom_joueur);
         char getCouleurJoueur();
         map<string, Case*> getCases();
         list<Plateau*> getBranches();
@@ -40,6 +46,7 @@ class Plateau
         //méthodes de jeu
         void ecoute_entree(); 
         void tour_ia(int profondeur);
+
 
         //fonctions de jeu
         bool ajouterPiece(string nom, char couleur);

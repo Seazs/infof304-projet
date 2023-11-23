@@ -30,7 +30,7 @@ Plateau::Plateau()
     getCases()["d5"]->setCouleur('X');
     getCases()["e5"]->setCouleur('O');
 
-/*
+
     cases["a1"]->setCouleur('O');
     cases["a2"]->setCouleur('X');
     cases["a3"]->setCouleur('X');
@@ -90,13 +90,14 @@ Plateau::Plateau()
     cases["h1"]->setCouleur('X');
     cases["h2"]->setCouleur('X');
     cases["h3"]->setCouleur('X');
-    cases["h4"]->setCouleur('X');*/
+    cases["h4"]->setCouleur('X');
 
 
     //couleur du joueur qui commence
     setCouleurJoueur('X');
     initialise_voisin_cases();
     setevaluation_score(0);
+
 }
 
 Plateau::Plateau(Plateau& plateau){
@@ -175,11 +176,48 @@ void Plateau::setevaluation_score(int score){
 }
 
 
+void Plateau::demande_nom_joueur1(char nom_joueur){
+    string nomjoueur1;
+    lettre_joueur1=nom_joueur;
+    if (nom_joueur == 'A') {
+            NomJoueur1 = "Ordinateur";
+            cout<<"L'ordinateur joue"<<endl;
+            return;
+        }
+    cout << "Entrez le nom du joueur : ";
+    cin >> nomjoueur1;
+    if (nom_joueur == 'H') {
+            NomJoueur1 = nomjoueur1;
+        }
+    return ;
+}
+
+void Plateau::demande_nom_joueur2(char nom_joueur){
+    string nomjoueur2;
+    lettre_joueur2=nom_joueur;
+    if (nom_joueur == 'A') {
+                NomJoueur2 = "Ordinateur";
+                cout<<"L'ordinateur joue"<<endl;
+               return;
+            }
+    cout << "Entrez le nom du joueur : ";
+    cin >> nomjoueur2;
+    if (nom_joueur == 'H') {
+            NomJoueur2 = nomjoueur2;
+        }
+    cout<<"je suis moche"<<NomJoueur1<<endl;
+    return ;
+    
+}
+
+
 //méthodes d'accès
 
 char Plateau::getCouleurJoueur(){
     return couleur_joueur;
 }
+
+
 
 map<string, Case*> Plateau::getCases(){
     return cases;
@@ -553,7 +591,7 @@ void Plateau::affiche_score()//appelle "score_joueur" pour les deux joueurs et a
     int score_joueur_O = score_joueur('O');
     cout << "Fin de partie" << endl;
     cout << "Score du joueur blanc : " << score_joueur_O << endl;
-    cout << "Score du joueur noir : " << score_joueur_X << endl;
+    cout << "Score du joueur noir :  "<< score_joueur_X << endl;
     if(score_joueur_X > score_joueur_O){
         cout << "Le joueur noir a gagné (X)" << endl;
     }

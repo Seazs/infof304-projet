@@ -6,19 +6,22 @@ using std::cin;
 
 int main()
 {
+    Plateau p;
     cout << "Bienvenue au jeu de reversi" << endl;
     cout << "Choisissez le type du joueur 1 (humain (H), intelligence artificielle (A) ou fichier (F)) : ";
     char joueur1;
     cin >> joueur1;
+    p.demande_nom_joueur1(joueur1);
     cout << "Choisissez le type du joueur 2 (humain (H), intelligence artificielle (A) ou fichier (F)) : ";
     char joueur2;
     cin >> joueur2;
+    p.demande_nom_joueur2(joueur2); 
     if(joueur1 != 'H' && joueur1 != 'A' && joueur1 != 'F' && joueur2 != 'H' && joueur2 != 'A' && joueur2 != 'F'){
         cout << "Vous avez choisi un type de joueur invalide" << endl;
         return 0;
     }
     char type_du_joueur_qui_joue = joueur1; //le joueur 1 commence toujours
-    Plateau p; //initialise le plateau
+    
     while (true)  //boucle de jeu
     {
         p.afficherPlateau(); // le plateau est affiché au debut de chaque tour
