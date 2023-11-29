@@ -1,4 +1,7 @@
 #include "Case.h"
+#include <iostream>
+using std::cout;
+using std::endl;
 
 Case::Case(string nom)
 {
@@ -17,7 +20,16 @@ Case::Case(string nom)
 
 Case::~Case()
 {
-    //dtor
+    //libere les arguments et supprime la case
+    nom.clear();
+    up = NULL;
+    down = NULL;
+    left = NULL;
+    right = NULL;
+    upLeft = NULL;
+    upRight = NULL;
+    downLeft = NULL;
+    downRight = NULL;
 }
 
 void Case::setUp(Case* up)
@@ -63,7 +75,7 @@ void Case::setDownRight(Case* downRight)
 
 string Case::getNom()
 {
-        return nom;
+    return nom;
 }
 
 Case* Case::getUp()
