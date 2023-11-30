@@ -108,6 +108,8 @@ Plateau::Plateau(Plateau& plateau){
     cases[case_originale.first] = nouvelle_case;
     }
     couleur_joueur = plateau.couleur_joueur;
+    NomJoueur1 = plateau.NomJoueur1;
+    NomJoueur2 = plateau.NomJoueur2;
     initialise_voisin_cases();
     setevaluation_score(0);
 }
@@ -279,7 +281,7 @@ void Plateau::afficherPlateau()
 void Plateau::ecoute_entree() //demande le nom de la case à modifier à l'humain et appelle "ajouterPiece"
 {
     string nom_case; //initialise le nom de la case à modifier entrée par l'humain
-    cout << "Entrez le nom de la case à modifier du joueur " << couleur_joueur << " : " ;
+    cout << "Entrez le nom de la case à modifier du joueur " <<NomJoueur1<< " de couleur " << couleur_joueur << " : " ;
     cin >> nom_case; //demande le nom de la case à modifier
     while(ajouterPiece(nom_case, couleur_joueur) == false) //tant que la case n'existe pas ou qu'elle est déjà occupée, on redemande le nom de la case
     {
@@ -590,13 +592,13 @@ void Plateau::affiche_score()//appelle "score_joueur" pour les deux joueurs et a
     int score_joueur_X = score_joueur('X');
     int score_joueur_O = score_joueur('O');
     cout << "Fin de partie" << endl;
-    cout << "Score du joueur blanc : " << score_joueur_O << endl;
-    cout << "Score du joueur noir :  "<< score_joueur_X << endl;
+    cout << "Score du joueur blanc "<<NomJoueur1<<": " << score_joueur_O << endl;
+    cout << "Score du joueur noir"<<NomJoueur2<< " : "<< score_joueur_X << endl;
     if(score_joueur_X > score_joueur_O){
-        cout << "Le joueur noir a gagné (X)" << endl;
+        cout <<NomJoueur2<< " a gagné (X)" << endl;
     }
     else if(score_joueur_X < score_joueur_O){
-        cout << "Le joueur blanc a gagné (O)" << endl;
+        cout << NomJoueur1<<" a gagné (O)" << endl;
     }
     else{
         cout << "Egalité" << endl;
