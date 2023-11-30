@@ -2,7 +2,7 @@
 /projetprelim
 /projet
 /projetgraph
-/obj
+/obj/*.o
 
 # Object files
 *.o
