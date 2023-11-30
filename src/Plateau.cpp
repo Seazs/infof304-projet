@@ -734,9 +734,11 @@ void Plateau::supresseur_d_arbre()//s'appelle récursivement pour supprimer tout
 
 void Plateau::creer_arbre(int profondeur)//nouvelle version de "regarde_le_futur"
 {
+    cout << "est rentré dans creer_arbre ( profondeur = " << profondeur << " )" << " le plateau racine est de couleur " << getCouleurJoueur() << endl;
     if(profondeur > 0)//si la profondeur n'est pas atteinte, on continue de créer l'arbre des possibilités
     {
         if(getBranches().size() > 0){//si le plateau a des branches
+        cout << "pas sencé rentrer ici" << endl;
             for(Plateau* branche : getBranches()){//appelle chaque branche
                 branche->creer_arbre(profondeur-1);//crée l'arbre des possibilités pour les branches du plateau actuel
             }
@@ -751,6 +753,7 @@ void Plateau::creer_arbre(int profondeur)//nouvelle version de "regarde_le_futur
                     itr = cases.find(nom); //recherche la case dans la map
                     if(ajouterPieceVirtuelle(nom, getCouleurJoueur()) == true)//si une pièce peut être ajoutée sur cette case
                     {
+                        cout << "ajoute une branche" << endl;
                         Plateau* p_virtuel = new Plateau(*this);//crée un plateau virtuel copie du plateau actuel
                         p_virtuel->ajouterPiece_silencieux(nom, getCouleurJoueur());//ajoute une pièce sur la case du plateau virtuel
                         ajoute_branche(p_virtuel);//ajoute le plateau virtuel comme branche du plateau actuel
@@ -760,6 +763,7 @@ void Plateau::creer_arbre(int profondeur)//nouvelle version de "regarde_le_futur
                         p_virtuel->evaluation_initiale();//initialise le score du plateau virtuel
                         p_virtuel->creer_arbre(profondeur-1);//crée l'arbre des possibilités pour les branches du plateau actuel
                         if(elagage_alpha_beta()){//si l'élagage alpha beta a été fait, on arrête de créer des branches pour le plateau actuel
+                            cout << "élagage alpha beta" << endl;
                             return;
                         }
                     }
@@ -769,8 +773,11 @@ void Plateau::creer_arbre(int profondeur)//nouvelle version de "regarde_le_futur
     }
     else{//si la profondeur est atteinte
         setevaluation_score(evaluation());//évalue le plateau feuille
+        cout << "score du plateau feuille : " << getevaluation_score() << endl;
+        afficherPlateau();
     }
     minimax();//appelle la fonction minimax pour le plateau actuel
+    cout << "est sorti de creer_arbre ( profondeur = " << profondeur << " )" << " le plateau est de couleur " << getCouleurJoueur() << " et son score est " << getevaluation_score() << endl;
 }
 
 void Plateau::evaluation_initiale()//donne une evaluation initiale en fonction de la couleur du plateau
@@ -810,8 +817,8 @@ bool Plateau::elagage_alpha_beta()
             if(frere != this){//si le frere est différent du plateau actuel
                 if(getCouleurJoueur() == 'X'){
                     for(Plateau* fils : getBranches()){
-                        if(fils->getevaluation_score() > frere->getevaluation_score()){
-                            setevaluation_score(fils->getevaluation_score());//le score du plateau actuel est le score de la branche avec le meilleur score
+                        if(fils->getevaluation_score() >= frere->getevaluation_score()){
+                            //setevaluation_score(fils->getevaluation_score());//le score du plateau actuel est le score de la branche avec le meilleur score
                             return true;//on arrête de créer des branches pour le plateau actuel
                         }
                     }
@@ -819,7 +826,7 @@ bool Plateau::elagage_alpha_beta()
                 else{
                     for(Plateau* fils : getBranches()){
                         if(fils->getevaluation_score() < frere->getevaluation_score()){
-                            setevaluation_score(fils->getevaluation_score());//le score du plateau actuel est le score de la branche avec le meilleur score
+                            //setevaluation_score(fils->getevaluation_score());//le score du plateau actuel est le score de la branche avec le meilleur score
                             return true;//on arrête de créer des branches pour le plateau actuel
                         }
                     }
